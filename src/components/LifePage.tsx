@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, MouseEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import tilichoPhoto from '../assets/images/tilicho-lake.jpg';
 import {
   Heart,
   ArrowUpRight,
@@ -21,7 +22,8 @@ import {
   TreePine,
   Users,
   Share2,
-  Check
+  Check,
+  ZoomIn
 } from 'lucide-react';
 
 export type PlaceCategory = 'all' | 'lakes-treks' | 'mustang' | 'waterfalls-rivers' | 'heritage-hills' | 'friends-life';
@@ -76,9 +78,10 @@ const exploredPlaces: ExploredPlace[] = [
     categoryLabel: 'Glacial Wonder',
     bestSeason: 'Sep - Nov & Mar - May',
     type: 'High-Altitude Glacial Trek',
-    imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: tilichoPhoto,
     summary: 'One of the highest glacial lakes in the world, framed by the sheer snow-covered Tilicho Peak at nearly 5,000 meters.',
     highlights: [
+      'Standing before the sacred shrine and vibrant prayer flags overlooking the azure glacial lake.',
       'Navigating the adrenaline-pumping Landslide Zone between Siri Kharka and Base Camp.',
       'Gazing at the turquoise frozen waters underneath the dramatic 7,134m Tilicho Peak.',
       'Testing personal limits against thin air and rewarding endurance with surreal mountain vistas.'
@@ -86,7 +89,7 @@ const exploredPlaces: ExploredPlace[] = [
     travelStory: [
       'The journey to Tilicho Lake is as demanding as it is exhilarating. Starting from the dry valleys of Manang, the trail cuts across dramatic scree slopes and rugged canyons before arriving at Tilicho Base Camp.',
       'The final morning summit push starts under starry freezing skies. Reaching 4,919 meters and seeing the turquoise blue water surrounded by massive glaciers and snow walls is an emotional triumph.',
-      'The sheer scale of nature here puts everything into perspective — standing before Tilicho leaves an indelible mark of humility and awe.'
+      'Standing right by the sacred shrine draped in colorful prayer flags with the vast blue water and snow mountains stretching endlessly ahead leaves an indelible mark of humility and awe.'
     ]
   },
   {
@@ -443,9 +446,25 @@ interface LifePageProps {
 
 export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageProps) {
   const [selectedPlace, setSelectedPlace] = useState<ExploredPlace | null>(null);
+  const [previewPlace, setPreviewPlace] = useState<ExploredPlace | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<PlaceCategory>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Close preview or modal on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (previewPlace) {
+          setPreviewPlace(null);
+        } else if (selectedPlace) {
+          handleClosePlace();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [previewPlace, selectedPlace]);
 
   // Deep-link support: auto-open story if initialStoryId matches
   useEffect(() => {
@@ -662,8 +681,12 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 transition={{ duration: 0.4, delay: index * 0.04 }}
                 className="group rounded-3xl border border-white/10 bg-[#070707] flex flex-col justify-between hover:border-emerald-500/30 transition-all duration-300 hover:-translate-y-1.5 shadow-xl shadow-black/20 overflow-hidden relative"
               >
-                {/* Photo Thumbnail Container */}
-                <div className="relative h-48 w-full overflow-hidden bg-zinc-900">
+                {/* Photo Thumbnail Container - Clickable to Preview */}
+                <div 
+                  onClick={() => setPreviewPlace(place)}
+                  title="Click to preview full-screen image"
+                  className="relative h-48 w-full overflow-hidden bg-zinc-900 cursor-zoom-in group/img"
+                >
                   <img
                     src={place.imageUrl}
                     alt={place.name}
@@ -672,8 +695,16 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-transparent to-black/30" />
 
+                  {/* Hover Preview Overlay Indicator */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-[2px] pointer-events-none">
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 text-white text-xs font-mono font-medium shadow-xl">
+                      <ZoomIn className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Preview Image</span>
+                    </div>
+                  </div>
+
                   {/* Category Pill on Photo */}
-                  <div className="absolute top-3 left-3">
+                  <div className="absolute top-3 left-3 pointer-events-none">
                     <span className="px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider font-semibold backdrop-blur-md bg-black/60 text-emerald-300 border border-white/10">
                       {place.categoryLabel}
                     </span>
@@ -704,7 +735,11 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
 
                   {/* Quick Expand Icon */}
                   <button
-                    onClick={() => handleOpenPlace(place)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenPlace(place);
+                    }}
+                    title="Read Story"
                     aria-label="Expand Travelogue"
                     className="absolute bottom-3 right-3 p-2 rounded-full backdrop-blur-md bg-black/60 text-white hover:bg-emerald-600 transition-colors border border-white/10 cursor-pointer"
                   >
@@ -768,17 +803,29 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 onClick={(e) => e.stopPropagation()}
                 className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto glass rounded-3xl border border-white/10 shadow-2xl space-y-6"
               >
-                {/* Header Banner Image */}
-                <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-t-3xl bg-zinc-900">
+                {/* Header Banner Image - Clickable for Fullscreen View */}
+                <div 
+                  onClick={() => setPreviewPlace(selectedPlace)}
+                  title="Click to expand full-screen photo"
+                  className="relative h-64 sm:h-72 w-full overflow-hidden rounded-t-3xl bg-zinc-900 cursor-zoom-in group/modalimg"
+                >
                   <img
                     src={selectedPlace.imageUrl}
                     alt={selectedPlace.name}
-                    className="w-full h-full object-cover filter brightness-[0.85]"
+                    className="w-full h-full object-cover filter brightness-[0.85] transition-transform duration-700 group-hover/modalimg:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-transparent to-black/40" />
 
+                  {/* Top Left Zoom Indicator */}
+                  <div className="absolute top-4 left-4 pointer-events-none">
+                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-medium backdrop-blur-md bg-black/60 text-emerald-300 border border-white/10 opacity-80 group-hover/modalimg:opacity-100 transition-opacity">
+                      <ZoomIn className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Click to preview image</span>
+                    </span>
+                  </div>
+
                   {/* Header Top Controls */}
-                  <div className="absolute top-4 right-4 flex items-center gap-2">
+                  <div className="absolute top-4 right-4 flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                     <button
                       type="button"
                       onClick={() => handleCopyShareLink(selectedPlace)}
@@ -806,7 +853,7 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                     </button>
                   </div>
 
-                  <div className="absolute bottom-6 left-6 right-6">
+                  <div className="absolute bottom-6 left-6 right-6 pointer-events-none">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
                       <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest font-semibold bg-emerald-600/90 text-white backdrop-blur-md">
                         {selectedPlace.categoryLabel}
@@ -865,6 +912,14 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
 
                     <div className="flex items-center gap-2">
                       <button
+                        onClick={() => setPreviewPlace(selectedPlace)}
+                        className="px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/10 text-white text-xs font-semibold transition-all border border-white/10 cursor-pointer flex items-center gap-1.5"
+                      >
+                        <ZoomIn className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>Preview Full Photo</span>
+                      </button>
+
+                      <button
                         onClick={() => handleCopyShareLink(selectedPlace)}
                         className="px-4 py-2 rounded-full bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5"
                       >
@@ -891,6 +946,99 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                   </div>
                 </div>
               </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Full-Screen High-Resolution Image Lightbox Preview */}
+        <AnimatePresence>
+          {previewPlace && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[100] flex flex-col items-center justify-between p-4 sm:p-8 bg-black/95 backdrop-blur-2xl"
+              onClick={() => setPreviewPlace(null)}
+            >
+              {/* Top Bar Controls */}
+              <div 
+                className="w-full max-w-6xl flex items-center justify-between z-10"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider bg-emerald-600/90 text-white backdrop-blur-md shadow-md">
+                    {previewPlace.categoryLabel}
+                  </span>
+                  {previewPlace.altitude && (
+                    <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-sky-600/90 text-white backdrop-blur-md flex items-center gap-1.5 shadow-md">
+                      <Mountain className="w-3.5 h-3.5" />
+                      {previewPlace.altitude}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => handleCopyShareLink(previewPlace)}
+                    className="px-4 py-2 rounded-full bg-white/10 hover:bg-emerald-600 text-white text-xs font-mono font-medium transition-all border border-white/15 backdrop-blur-md cursor-pointer flex items-center gap-2 shadow-lg"
+                  >
+                    {copiedId === previewPlace.id ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-300" />
+                        <span>Link Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Share2 className="w-3.5 h-3.5" />
+                        <span>Share Story</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => setPreviewPlace(null)}
+                    className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors border border-white/20 backdrop-blur-md cursor-pointer shadow-lg"
+                    aria-label="Close Preview"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Center High-Resolution Image */}
+              <div 
+                className="relative my-auto max-h-[75vh] max-w-5xl flex items-center justify-center overflow-hidden rounded-2xl border border-white/15 shadow-2xl shadow-black/90"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <motion.img
+                  initial={{ scale: 0.92, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.92, opacity: 0 }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  src={previewPlace.imageUrl}
+                  alt={previewPlace.name}
+                  className="max-h-[75vh] w-auto max-w-full object-contain rounded-2xl select-none"
+                />
+              </div>
+
+              {/* Bottom Caption Bar */}
+              <div 
+                className="w-full max-w-4xl text-center z-10 pb-2 space-y-1.5"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h3 className="font-display text-xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-lg">
+                  {previewPlace.name}
+                </h3>
+                <p className="text-xs sm:text-sm font-mono text-emerald-400 flex items-center justify-center gap-1.5">
+                  <MapPin className="w-4 h-4" />
+                  {previewPlace.location}, {previewPlace.region} • {previewPlace.type}
+                </p>
+                <p className="text-[11px] font-mono text-zinc-500 pt-1">
+                  Press ESC or click anywhere outside image to close
+                </p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
