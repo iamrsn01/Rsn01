@@ -27,6 +27,8 @@ export type BlogCategory = 'all' | 'work' | 'life';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<View>('home');
+  const [activeStoryId, setActiveStoryId] = useState<string | null>(null);
+  const [activeArticleId, setActiveArticleId] = useState<string | null>(null);
   const [selectedToolCategory, setSelectedToolCategory] = useState<ToolCategory>('all');
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     if (typeof window !== 'undefined') {
@@ -38,6 +40,46 @@ export default function App() {
 
   // Initialize general-purpose mouse glow spotlight tracking
   useMouseGlow();
+
+  // Parse URL hash on initial load and on hash change for deep-linking
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace(/^#\/?/, '').toLowerCase();
+      
+      if (!hash || hash === 'home') {
+        setCurrentView('home');
+        setActiveStoryId(null);
+        setActiveArticleId(null);
+      } else if (hash.includes('tools')) {
+        setCurrentView('tools');
+      } else if (hash.includes('lets-talk') || hash.includes('contact')) {
+        setCurrentView('lets-talk');
+      } else if (hash.includes('life')) {
+        setCurrentView('life');
+        // Extract story id e.g. "blog/life/friends-more-than-decades" or "life/friends-more-than-decades"
+        const parts = hash.split('/');
+        const storyPart = parts[parts.length - 1];
+        if (storyPart && storyPart !== 'life' && storyPart !== 'blog') {
+          setActiveStoryId(storyPart);
+        }
+      } else if (hash.includes('work')) {
+        setCurrentView('work');
+        const parts = hash.split('/');
+        const articlePart = parts[parts.length - 1];
+        if (articlePart && articlePart !== 'work' && articlePart !== 'blog') {
+          setActiveArticleId(articlePart);
+        }
+      } else if (hash.includes('friends') || hash.includes('rara') || hash.includes('tilicho') || hash.includes('mustang') || hash.includes('abc')) {
+        // Direct place ID match in hash
+        setCurrentView('life');
+        setActiveStoryId(hash.split('/').pop() || hash);
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -61,6 +103,19 @@ export default function App() {
     setCurrentView(view);
     if (category) {
       setSelectedToolCategory(category);
+    }
+
+    // Update URL hash smoothly for shareable links
+    if (view === 'home') {
+      window.location.hash = '#/';
+    } else if (view === 'work' || view === 'blog') {
+      window.location.hash = '#/blog/work';
+    } else if (view === 'life') {
+      window.location.hash = '#/blog/life';
+    } else if (view === 'tools') {
+      window.location.hash = '#/tools';
+    } else if (view === 'lets-talk') {
+      window.location.hash = '#/lets-talk';
     }
   };
 
@@ -97,11 +152,20 @@ export default function App() {
             <Contact />
           </>
         ) : currentView === 'work' ? (
-          <WorkPage onNavigateToLife={() => handleNavigate('life')} />
+          <WorkPage 
+            initialArticleId={activeArticleId}
+            onNavigateToLife={() => handleNavigate('life')} 
+          />
         ) : currentView === 'life' ? (
-          <LifePage onNavigateToWork={() => handleNavigate('work')} />
+          <LifePage 
+            initialStoryId={activeStoryId}
+            onNavigateToWork={() => handleNavigate('work')} 
+          />
         ) : currentView === 'blog' ? (
-          <WorkPage onNavigateToLife={() => handleNavigate('life')} />
+          <WorkPage 
+            initialArticleId={activeArticleId}
+            onNavigateToLife={() => handleNavigate('life')} 
+          />
         ) : currentView === 'tools' ? (
           <ToolsPage 
             activeCategory={selectedToolCategory} 

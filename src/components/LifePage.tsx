@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, MouseEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Heart,
@@ -19,7 +19,9 @@ import {
   Maximize2,
   CheckCircle2,
   TreePine,
-  Users
+  Users,
+  Share2,
+  Check
 } from 'lucide-react';
 
 export type PlaceCategory = 'all' | 'lakes-treks' | 'mustang' | 'waterfalls-rivers' | 'heritage-hills' | 'friends-life';
@@ -435,13 +437,46 @@ const exploredPlaces: ExploredPlace[] = [
 ];
 
 interface LifePageProps {
+  initialStoryId?: string | null;
   onNavigateToWork?: () => void;
 }
 
-export default function LifePage({ onNavigateToWork }: LifePageProps) {
+export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageProps) {
   const [selectedPlace, setSelectedPlace] = useState<ExploredPlace | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<PlaceCategory>('all');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Deep-link support: auto-open story if initialStoryId matches
+  useEffect(() => {
+    if (initialStoryId) {
+      const match = exploredPlaces.find(
+        p => p.id.toLowerCase() === initialStoryId.toLowerCase() ||
+             p.id.toLowerCase().includes(initialStoryId.toLowerCase())
+      );
+      if (match) {
+        setSelectedPlace(match);
+      }
+    }
+  }, [initialStoryId]);
+
+  const handleOpenPlace = (place: ExploredPlace) => {
+    setSelectedPlace(place);
+    window.location.hash = `#/blog/life/${place.id}`;
+  };
+
+  const handleClosePlace = () => {
+    setSelectedPlace(null);
+    window.location.hash = '#/blog/life';
+  };
+
+  const handleCopyShareLink = (place: ExploredPlace, e?: MouseEvent) => {
+    if (e) e.stopPropagation();
+    const shareUrl = `${window.location.origin}${window.location.pathname}#/blog/life/${place.id}`;
+    navigator.clipboard.writeText(shareUrl);
+    setCopiedId(place.id);
+    setTimeout(() => setCopiedId(null), 2500);
+  };
 
   const filteredPlaces = useMemo(() => {
     return exploredPlaces.filter(place => {
@@ -619,6 +654,7 @@ export default function LifePage({ onNavigateToWork }: LifePageProps) {
             {filteredPlaces.map((place, index) => (
               <motion.article
                 key={place.id}
+                id={place.id}
                 layout
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -626,7 +662,7 @@ export default function LifePage({ onNavigateToWork }: LifePageProps) {
                 transition={{ duration: 0.4, delay: index * 0.04 }}
                 className="group rounded-3xl border border-white/10 bg-[#070707] flex flex-col justify-between hover:border-emerald-500/30 transition-all duration-300 hover:-translate-y-1.5 shadow-xl shadow-black/20 overflow-hidden relative"
               >
-                {/* Photo Thumbnail Container with dummy placeholder */}
+                {/* Photo Thumbnail Container */}
                 <div className="relative h-48 w-full overflow-hidden bg-zinc-900">
                   <img
                     src={place.imageUrl}
@@ -643,19 +679,32 @@ export default function LifePage({ onNavigateToWork }: LifePageProps) {
                     </span>
                   </div>
 
-                  {/* Altitude Badge if available */}
-                  {place.altitude && (
-                    <div className="absolute top-3 right-3">
+                  {/* 1-Click Copy Direct Link Button */}
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={(e) => handleCopyShareLink(place, e)}
+                      title="Copy direct shareable link for friends"
+                      className="p-2 rounded-full backdrop-blur-md bg-black/60 hover:bg-emerald-600 text-zinc-300 hover:text-white transition-all border border-white/10 cursor-pointer flex items-center gap-1"
+                    >
+                      {copiedId === place.id ? (
+                        <Check className="w-3.5 h-3.5 text-emerald-300" />
+                      ) : (
+                        <Share2 className="w-3.5 h-3.5" />
+                      )}
+                    </button>
+
+                    {place.altitude && (
                       <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium backdrop-blur-md bg-black/60 text-sky-200 border border-sky-500/20 flex items-center gap-1">
                         <Mountain className="w-3 h-3 text-sky-400" />
                         {place.altitude.split('(')[0]}
                       </span>
-                    </div>
-                  )}
+                    )}
+                  </div>
 
                   {/* Quick Expand Icon */}
                   <button
-                    onClick={() => setSelectedPlace(place)}
+                    onClick={() => handleOpenPlace(place)}
                     aria-label="Expand Travelogue"
                     className="absolute bottom-3 right-3 p-2 rounded-full backdrop-blur-md bg-black/60 text-white hover:bg-emerald-600 transition-colors border border-white/10 cursor-pointer"
                   >
@@ -688,7 +737,7 @@ export default function LifePage({ onNavigateToWork }: LifePageProps) {
                     </span>
 
                     <button
-                      onClick={() => setSelectedPlace(place)}
+                      onClick={() => handleOpenPlace(place)}
                       className="text-xs font-semibold text-emerald-400 hover:text-white flex items-center gap-1 transition-colors pl-2 cursor-pointer"
                     >
                       <span>Read Story</span>
@@ -709,7 +758,7 @@ export default function LifePage({ onNavigateToWork }: LifePageProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
-              onClick={() => setSelectedPlace(null)}
+              onClick={handleClosePlace}
             >
               <motion.div
                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -728,13 +777,34 @@ export default function LifePage({ onNavigateToWork }: LifePageProps) {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-transparent to-black/40" />
 
-                  {/* Close button */}
-                  <button
-                    onClick={() => setSelectedPlace(null)}
-                    className="absolute top-4 right-4 p-2 rounded-full bg-black/60 hover:bg-white/20 text-white transition-colors border border-white/10 backdrop-blur-md cursor-pointer"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
+                  {/* Header Top Controls */}
+                  <div className="absolute top-4 right-4 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleCopyShareLink(selectedPlace)}
+                      className="px-3.5 py-1.5 rounded-full bg-black/60 hover:bg-emerald-600 text-white text-xs font-mono font-medium transition-all border border-white/10 backdrop-blur-md cursor-pointer flex items-center gap-1.5"
+                    >
+                      {copiedId === selectedPlace.id ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-300" />
+                          <span>Link Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Share2 className="w-3.5 h-3.5" />
+                          <span>Share Link</span>
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={handleClosePlace}
+                      aria-label="Close modal"
+                      className="p-2 rounded-full bg-black/60 hover:bg-white/20 text-white transition-colors border border-white/10 backdrop-blur-md cursor-pointer"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
 
                   <div className="absolute bottom-6 left-6 right-6">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -782,7 +852,7 @@ export default function LifePage({ onNavigateToWork }: LifePageProps) {
                     ))}
                   </div>
 
-                  {/* Meta Tags and Close */}
+                  {/* Meta Tags and Actions */}
                   <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
                     <div className="flex flex-wrap gap-2 text-xs font-mono text-zinc-400">
                       <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10">
@@ -793,12 +863,31 @@ export default function LifePage({ onNavigateToWork }: LifePageProps) {
                       </span>
                     </div>
 
-                    <button
-                      onClick={() => setSelectedPlace(null)}
-                      className="px-5 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-colors cursor-pointer"
-                    >
-                      Close Travelogue
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleCopyShareLink(selectedPlace)}
+                        className="px-4 py-2 rounded-full bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5"
+                      >
+                        {copiedId === selectedPlace.id ? (
+                          <>
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Share2 className="w-3.5 h-3.5" />
+                            <span>Share with Friends</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={handleClosePlace}
+                        className="px-5 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-colors cursor-pointer"
+                      >
+                        Close
+                      </button>
+                    </div>
                   </div>
                 </div>
               </motion.div>

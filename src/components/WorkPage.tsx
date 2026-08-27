@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, MouseEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Briefcase,
@@ -14,7 +14,9 @@ import {
   Cpu,
   Terminal,
   CheckCircle2,
-  Heart
+  Compass,
+  Share2,
+  Check
 } from 'lucide-react';
 
 interface WorkArticle {
@@ -104,18 +106,51 @@ const workArticles: WorkArticle[] = [
       'Modern web apps live or die by perceived speed. Users expect interactions to register instantaneously, even over high-latency connections.',
       'By pairing optimistic UI updates with resilient rollback mechanisms and strategic caching, interfaces feel instantaneous while maintaining robust data synchronization.',
       'Structuring API payloads with lean schemas and utilizing compressed transport formats further ensures rapid page transitions and efficient resource consumption.'
-    ],
+    ]
   }
 ];
 
 interface WorkPageProps {
+  initialArticleId?: string | null;
   onNavigateToLife?: () => void;
 }
 
-export default function WorkPage({ onNavigateToLife }: WorkPageProps) {
+export default function WorkPage({ initialArticleId, onNavigateToLife }: WorkPageProps) {
   const [selectedArticle, setSelectedArticle] = useState<WorkArticle | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTag, setActiveTag] = useState<string>('all');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Auto-open article if deep link matches
+  useEffect(() => {
+    if (initialArticleId) {
+      const match = workArticles.find(
+        a => a.id.toLowerCase() === initialArticleId.toLowerCase() ||
+             a.id.toLowerCase().includes(initialArticleId.toLowerCase())
+      );
+      if (match) {
+        setSelectedArticle(match);
+      }
+    }
+  }, [initialArticleId]);
+
+  const handleOpenArticle = (article: WorkArticle) => {
+    setSelectedArticle(article);
+    window.location.hash = `#/blog/work/${article.id}`;
+  };
+
+  const handleCloseArticle = () => {
+    setSelectedArticle(null);
+    window.location.hash = '#/blog/work';
+  };
+
+  const handleCopyShareLink = (article: WorkArticle, e?: MouseEvent) => {
+    if (e) e.stopPropagation();
+    const shareUrl = `${window.location.origin}${window.location.pathname}#/blog/work/${article.id}`;
+    navigator.clipboard.writeText(shareUrl);
+    setCopiedId(article.id);
+    setTimeout(() => setCopiedId(null), 2500);
+  };
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
@@ -161,9 +196,9 @@ export default function WorkPage({ onNavigateToLife }: WorkPageProps) {
               {onNavigateToLife && (
                 <button
                   onClick={onNavigateToLife}
-                  className="flex items-center gap-2 text-xs font-medium text-zinc-400 hover:text-pink-400 px-3.5 py-1.5 rounded-full bg-white/[0.03] hover:bg-pink-500/10 border border-white/5 hover:border-pink-500/30 transition-all duration-300"
+                  className="flex items-center gap-2 text-xs font-medium text-zinc-400 hover:text-emerald-400 px-3.5 py-1.5 rounded-full bg-white/[0.03] hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/30 transition-all duration-300 cursor-pointer"
                 >
-                  <Heart className="w-3.5 h-3.5 text-pink-400" />
+                  <Compass className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Switch to Life Page</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </button>
@@ -171,20 +206,20 @@ export default function WorkPage({ onNavigateToLife }: WorkPageProps) {
             </div>
 
             <h1 className="mt-5 font-display text-3xl sm:text-5xl font-bold text-white tracking-tight leading-tight">
-              Software Architecture, <span className="text-purple-400">Code</span> & Systems.
+              Engineering, Architecture & <span className="text-purple-400">IT Solutions</span>.
             </h1>
 
             <p className="mt-4 max-w-2xl text-sm sm:text-base leading-relaxed text-zinc-400 font-light">
-              Technical essays, development deep dives, UI craftsmanship, and IT infrastructure insights from building real-world digital applications.
+              In-depth articles, architectural breakdowns, and hands-on IT troubleshooting guides based on real-world web engineering and enterprise support experience.
             </p>
 
-            {/* Search & Tag Filter Bar */}
-            <div className="mt-8 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            {/* Search & Tags Bar */}
+            <div className="mt-8 pt-6 border-t border-white/5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                 <input
                   type="text"
-                  placeholder="Search work articles by title, tag, or topic..."
+                  placeholder="Search articles (e.g. React, IT support, design)..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-purple-500/50 transition-all"
@@ -196,7 +231,7 @@ export default function WorkPage({ onNavigateToLife }: WorkPageProps) {
                   <button
                     key={tag}
                     onClick={() => setActiveTag(tag)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 ${activeTag === tag
+                    className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 cursor-pointer ${activeTag === tag
                         ? 'bg-purple-600 text-white font-medium shadow-md shadow-purple-900/30'
                         : 'bg-white/[0.03] text-zinc-400 hover:text-white hover:bg-white/10 border border-white/5'
                       }`}
@@ -209,65 +244,60 @@ export default function WorkPage({ onNavigateToLife }: WorkPageProps) {
           </div>
         </motion.div>
 
-        {/* Work Articles Grid */}
-        <div className="grid gap-6 md:grid-cols-2">
+        {/* Articles List Grid */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
             {filteredArticles.map((article, index) => (
               <motion.article
                 key={article.id}
+                id={article.id}
                 layout
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="group rounded-[2rem] border border-white/10 bg-[#070707] p-8 flex flex-col justify-between hover:border-purple-500/30 transition-all duration-300 hover:-translate-y-1 shadow-xl shadow-black/20 relative overflow-hidden"
+                className="group rounded-3xl border border-white/10 bg-[#070707] p-6 flex flex-col justify-between hover:border-purple-500/30 transition-all duration-300 hover:-translate-y-1 shadow-xl shadow-black/20"
               >
-                <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
-                  <ArrowUpRight className="w-5 h-5 text-purple-400" />
-                </div>
-
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-4">
-                    <div className="flex items-center gap-2">
-                      <span className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                        <Code2 className="w-3.5 h-3.5" />
-                      </span>
-                      <span className="text-[11px] font-mono text-zinc-400">{article.readTime}</span>
-                    </div>
-
-                    <span className="flex items-center gap-1 text-[11px] font-mono text-zinc-500">
-                      <Calendar className="w-3.5 h-3.5" /> {article.date}
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                      {article.category}
                     </span>
+
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={(e) => handleCopyShareLink(article, e)}
+                        title="Copy article link"
+                        className="p-1.5 rounded-lg bg-white/[0.03] hover:bg-purple-500/20 text-zinc-400 hover:text-purple-300 transition-colors cursor-pointer"
+                      >
+                        {copiedId === article.id ? (
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        ) : (
+                          <Share2 className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+                      <span className="text-[11px] font-mono text-zinc-500">{article.readTime}</span>
+                    </div>
                   </div>
 
-                  <h2 className="font-display text-xl sm:text-2xl font-bold text-white group-hover:text-purple-300 transition-colors leading-snug">
+                  <h2 className="font-display text-lg font-bold text-white group-hover:text-purple-300 transition-colors leading-snug">
                     {article.title}
                   </h2>
 
-                  <p className="mt-1 font-mono text-[11px] text-purple-400/80">
-                    {article.subtitle}
-                  </p>
-
-                  <p className="mt-3 text-sm leading-relaxed text-zinc-400 font-light">
+                  <p className="mt-2 text-xs leading-relaxed text-zinc-400 font-light line-clamp-3">
                     {article.summary}
                   </p>
                 </div>
 
-                <div className="mt-8 pt-5 border-t border-white/5 flex items-center justify-between">
-                  <div className="flex flex-wrap gap-1.5">
-                    {article.tags.map((tag) => (
-                      <span key={tag} className="text-[10px] font-mono text-zinc-400 bg-white/[0.03] border border-white/5 px-2 py-0.5 rounded-md">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+                  <span className="text-[11px] font-mono text-zinc-500">{article.date}</span>
                   <button
-                    onClick={() => setSelectedArticle(article)}
-                    className="text-xs font-semibold text-purple-300 hover:text-white flex items-center gap-1 transition-colors pl-2"
+                    onClick={() => handleOpenArticle(article)}
+                    className="text-xs font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors cursor-pointer"
                   >
-                    <span>Read Article</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
+                    <span>Read Guide</span>
+                    <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 </div>
               </motion.article>
@@ -283,7 +313,7 @@ export default function WorkPage({ onNavigateToLife }: WorkPageProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
-              onClick={() => setSelectedArticle(null)}
+              onClick={handleCloseArticle}
             >
               <motion.div
                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -302,12 +332,33 @@ export default function WorkPage({ onNavigateToLife }: WorkPageProps) {
                     <span className="text-xs font-mono text-zinc-400">• {selectedArticle.readTime}</span>
                   </div>
 
-                  <button
-                    onClick={() => setSelectedArticle(null)}
-                    className="p-1.5 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleCopyShareLink(selectedArticle)}
+                      className="px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-purple-500/20 text-xs font-mono text-zinc-300 hover:text-purple-300 transition-colors border border-white/10 cursor-pointer flex items-center gap-1.5"
+                    >
+                      {copiedId === selectedArticle.id ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Link Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Share2 className="w-3.5 h-3.5" />
+                          <span>Share</span>
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={handleCloseArticle}
+                      aria-label="Close modal"
+                      className="p-1.5 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
 
                 <div>
@@ -346,8 +397,8 @@ export default function WorkPage({ onNavigateToLife }: WorkPageProps) {
                   </div>
 
                   <button
-                    onClick={() => setSelectedArticle(null)}
-                    className="px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors"
+                    onClick={handleCloseArticle}
+                    className="px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors cursor-pointer"
                   >
                     Close
                   </button>
