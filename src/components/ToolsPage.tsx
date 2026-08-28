@@ -25,7 +25,11 @@ import {
   Check,
   Type,
   HelpCircle,
-  Keyboard
+  Keyboard,
+  Info,
+  ChevronDown,
+  ChevronUp,
+  Zap
 } from 'lucide-react';
 import { ToolCategory } from '../App';
 
@@ -69,6 +73,8 @@ const nepaliDictionary: Record<string, string> = {
   'tapai': 'तपाईं',
   'tapaiko': 'तपाईंको',
   'tapailai': 'तपाईंलाई',
+  'tapaaii': 'तपाईं',
+  'tapaai': 'तपाईं',
   'ma': 'म',
   'lai': 'लाई',
   'ko': 'को',
@@ -99,6 +105,9 @@ const nepaliDictionary: Record<string, string> = {
   'kasari': 'कसरी',
   'kahile': 'कहिले',
   'kaha': 'कहाँ',
+  'kahaa': 'कहाँ',
+  'yaha': 'यहाँ',
+  'yahaa': 'यहाँ',
   'kata': 'कतै',
   'ke': 'के',
   'k': 'के',
@@ -139,38 +148,219 @@ const nepaliDictionary: Record<string, string> = {
   'chitwan': 'चितवन',
   'butwal': 'बुटवल',
   'dharan': 'धरान',
-  'biratnagar': 'विराटनगर'
+  'biratnagar': 'विराटनगर',
+  'shree': 'श्री',
+  'shri': 'श्री',
+  'shankar': 'शंकर',
+  'shiva': 'शिव',
+  'topi': 'टोपी',
+  'Topi': 'टोपी',
+  'thik': 'ठीक',
+  'Thik': 'ठीक',
+  'tamatar': 'टमाटर',
+  'Tamatar': 'टमाटर',
+  'tamaatar': 'टमाटर',
+  'Tamaatar': 'टमाटर',
+  'dhal': 'ढाल',
+  'Dhal': 'ढाल',
+  'dhaal': 'ढाल',
+  'Dhaal': 'ढाल',
+  'gyan': 'ज्ञान',
+  'gyaan': 'ज्ञान',
+  'kshamata': 'क्षमता',
+  'kashta': 'कष्ट',
+  'kaShta': 'कष्ट',
+  'krishna': 'कृष्ण',
+  'krishNa': 'कृष्ण',
+  'vishnu': 'विष्णु',
+  'viShNu': 'विष्णु',
+  'prashna': 'प्रश्न',
+  'ishwar': 'ईश्वर',
+  'eeshwar': 'ईश्वर'
 };
 
-const phoneticVowels: Record<string, string> = {
-  'aa': 'आ', 'a': 'अ', 'ii': 'ई', 'ee': 'ई', 'i': 'इ',
-  'uu': 'ऊ', 'oo': 'ऊ', 'u': 'उ', 'e': 'ए', 'ai': 'ऐ',
-  'o': 'ओ', 'au': 'औ', 'ou': 'औ', 'ri': 'ऋ', 'Ri': 'ऋ'
+const independentVowels: Record<string, string> = {
+  'aa': 'आ', 'a': 'अ', 'A': 'आ', 'ii': 'ई', 'ee': 'ई', 'I': 'ई', 'i': 'इ',
+  'uu': 'ऊ', 'oo': 'ऊ', 'U': 'ऊ', 'u': 'उ', 'e': 'ए', 'E': 'ए', 'ai': 'ऐ',
+  'o': 'ओ', 'O': 'ओ', 'au': 'औ', 'ou': 'औ', 'ri': 'ऋ', 'Ri': 'ऋ', 'RI': 'ऋ'
 };
 
 const phoneticMatras: Record<string, string> = {
-  'aa': 'ा', 'a': '', 'ii': 'ी', 'ee': 'ी', 'i': 'ि',
-  'uu': 'ू', 'oo': 'ू', 'u': 'ु', 'e': 'े', 'ai': 'ै',
-  'o': 'ो', 'au': 'ौ', 'ou': 'ौ', 'ri': 'ृ', 'Ri': 'ृ'
+  'aa': 'ा', 'A': 'ा', 'a': '', 'ii': 'ी', 'ee': 'ी', 'I': 'ी', 'i': 'ि',
+  'uu': 'ू', 'oo': 'ू', 'U': 'ू', 'u': 'ु', 'e': 'े', 'E': 'े', 'ai': 'ै',
+  'o': 'ो', 'O': 'ो', 'au': 'ौ', 'ou': 'ौ', 'ri': 'ृ', 'Ri': 'ृ', 'RI': 'ृ'
 };
 
-const phoneticConsonants: Record<string, string> = {
-  'k': 'क', 'kh': 'ख', 'g': 'ग', 'gh': 'घ', 'ng': 'ङ',
-  'ch': 'च', 'chh': 'छ', 'j': 'ज', 'jh': 'झ', 'yn': 'ञ',
-  'T': 'ट', 'Th': 'ठ', 'D': 'ड', 'Dh': 'ढ', 'N': 'ण',
-  't': 'त', 'th': 'थ', 'd': 'द', 'dh': 'ध', 'n': 'न',
-  'p': 'प', 'ph': 'फ', 'f': 'फ', 'b': 'ब', 'bh': 'भ', 'v': 'भ',
-  'm': 'म', 'y': 'य', 'r': 'र', 'l': 'ल', 'w': 'व',
-  'sh': 'श', 'shh': 'ष', 'Sh': 'ष', 's': 'स', 'h': 'ह',
-  'ksh': 'क्ष', 'x': 'क्ष', 'tr': 'त्र', 'gy': 'ज्ञ', 'gya': 'ज्ञ'
-};
+const consonantsList = [
+  // 5 chars
+  { key: 'shree', val: 'श्री' },
+  { key: 'Shree', val: 'श्री' },
+
+  // 4 chars
+  { key: 'shhh', val: 'ष' },
+  { key: 'shth', val: 'ष्ठ' },
+  { key: 'shTh', val: 'ष्ठ' },
+  { key: 'Shth', val: 'ष्ठ' },
+  { key: 'ShTh', val: 'ष्ठ' },
+  { key: 'shch', val: 'श्च' },
+  { key: 'Shch', val: 'श्च' },
+
+  // 3 chars
+  { key: 'chh', val: 'छ' },
+  { key: 'Chh', val: 'छ' },
+  { key: 'CHH', val: 'छ' },
+  { key: 'ksh', val: 'क्ष' },
+  { key: 'kSh', val: 'क्ष' },
+  { key: 'Ksh', val: 'क्ष' },
+  { key: 'KSH', val: 'क्ष' },
+  { key: 'gya', val: 'ज्ञ' },
+  { key: 'Gya', val: 'ज्ञ' },
+  { key: 'jny', val: 'ज्ञ' },
+  { key: 'shr', val: 'श्र' },
+  { key: 'Shr', val: 'श्र' },
+  { key: 'sht', val: 'ष्ट' },
+  { key: 'shT', val: 'ष्ट' },
+  { key: 'Sht', val: 'ष्ट' },
+  { key: 'ShT', val: 'ष्ट' },
+  { key: 'shn', val: 'ष्ण' },
+  { key: 'shN', val: 'ष्ण' },
+  { key: 'Shn', val: 'ष्ण' },
+  { key: 'ShN', val: 'ष्ण' },
+  { key: 'shk', val: 'ष्क' },
+  { key: 'Shk', val: 'ष्क' },
+  { key: 'shp', val: 'ष्प' },
+  { key: 'Shp', val: 'ष्प' },
+  { key: 'shm', val: 'ष्म' },
+  { key: 'Shm', val: 'ष्म' },
+  { key: 'shw', val: 'श्व' },
+  { key: 'Shw', val: 'श्व' },
+  { key: 'shv', val: 'श्व' },
+  { key: 'Shv', val: 'श्व' },
+  { key: 'shl', val: 'श्ल' },
+  { key: 'shy', val: 'श्य' },
+  { key: 'Shy', val: 'श्य' },
+  { key: 'shh', val: 'ष' },
+  { key: 'Shh', val: 'ष' },
+  { key: 'dhy', val: 'ध्य' },
+  { key: 'ddh', val: 'द्ध' },
+  { key: 'khy', val: 'ख्य' },
+  { key: 'sth', val: 'स्थ' },
+  { key: 'spr', val: 'स्पृ' },
+
+  // 2 chars
+  { key: 'kh', val: 'ख' },
+  { key: 'Kh', val: 'ख' },
+  { key: 'KH', val: 'ख' },
+  { key: 'gh', val: 'घ' },
+  { key: 'Gh', val: 'घ' },
+  { key: 'GH', val: 'घ' },
+  { key: 'ng', val: 'ङ' },
+  { key: 'Ng', val: 'ङ' },
+  { key: 'NG', val: 'ङ' },
+  { key: 'ch', val: 'च' },
+  { key: 'Ch', val: 'च' },
+  { key: 'CH', val: 'च' },
+  { key: 'jh', val: 'झ' },
+  { key: 'Jh', val: 'झ' },
+  { key: 'JH', val: 'झ' },
+  { key: 'yn', val: 'ञ' },
+  { key: 'Yn', val: 'ञ' },
+  { key: 'Th', val: 'ठ' }, // Retroflex Th -> ठ
+  { key: 'TH', val: 'ठ' },
+  { key: 'Dh', val: 'ढ' }, // Retroflex Dh -> ढ
+  { key: 'DH', val: 'ढ' },
+  { key: 'th', val: 'थ' }, // Dental th -> थ
+  { key: 'dh', val: 'ध' }, // Dental dh -> ध
+  { key: 'ph', val: 'फ' },
+  { key: 'Ph', val: 'फ' },
+  { key: 'PH', val: 'फ' },
+  { key: 'bh', val: 'भ' },
+  { key: 'Bh', val: 'भ' },
+  { key: 'BH', val: 'भ' },
+  { key: 'sh', val: 'श' }, // Talavya Sha -> श
+  { key: 'Sh', val: 'ष' }, // Murdhanya Sha -> ष
+  { key: 'SH', val: 'ष' },
+  { key: 'tr', val: 'त्र' },
+  { key: 'Tr', val: 'त्र' },
+  { key: 'TR', val: 'त्र' },
+  { key: 'gy', val: 'ज्ञ' },
+  { key: 'Gy', val: 'ज्ञ' },
+  { key: 'GY', val: 'ज्ञ' },
+  { key: 'dy', val: 'द्य' },
+  { key: 'tt', val: 'त्त' },
+  { key: 'nn', val: 'न्न' },
+  { key: 'mm', val: 'म्म' },
+  { key: 'll', val: 'ल्ल' },
+  { key: 'st', val: 'स्त' },
+  { key: 'sk', val: 'स्क' },
+  { key: 'sp', val: 'स्प' },
+  { key: 'sm', val: 'स्म' },
+  { key: 'sy', val: 'स्य' },
+  { key: 'sw', val: 'स्व' },
+  { key: 'sv', val: 'स्व' },
+  { key: 'sn', val: 'स्न' },
+  { key: 'nt', val: 'न्त' },
+  { key: 'nd', val: 'न्द' },
+  { key: 'nb', val: 'न्ब' },
+  { key: 'nm', val: 'न्म' },
+  { key: 'ny', val: 'न्य' },
+  { key: 'pr', val: 'प्र' },
+  { key: 'br', val: 'ब्र' },
+  { key: 'kr', val: 'क्र' },
+  { key: 'gr', val: 'ग्र' },
+  { key: 'dr', val: 'द्र' },
+  { key: 'mr', val: 'म्र' },
+
+  // 1 char
+  { key: 'k', val: 'क' },
+  { key: 'K', val: 'क' },
+  { key: 'g', val: 'ग' },
+  { key: 'G', val: 'ग' },
+  { key: 'j', val: 'ज' },
+  { key: 'J', val: 'ज' },
+  { key: 'T', val: 'ट' }, // Retroflex T -> ट
+  { key: 'D', val: 'ड' }, // Retroflex D -> ड
+  { key: 'N', val: 'ण' }, // Retroflex N -> ण
+  { key: 't', val: 'त' }, // Dental t -> त
+  { key: 'd', val: 'द' }, // Dental d -> द
+  { key: 'n', val: 'न' }, // Dental n -> न
+  { key: 'p', val: 'प' },
+  { key: 'P', val: 'प' },
+  { key: 'f', val: 'फ' },
+  { key: 'F', val: 'फ' },
+  { key: 'b', val: 'ब' },
+  { key: 'B', val: 'ब' },
+  { key: 'v', val: 'भ' },
+  { key: 'V', val: 'भ' },
+  { key: 'm', val: 'म' },
+  { key: 'M', val: 'म' },
+  { key: 'y', val: 'य' },
+  { key: 'Y', val: 'य' },
+  { key: 'r', val: 'र' },
+  { key: 'R', val: 'र' },
+  { key: 'l', val: 'ल' },
+  { key: 'L', val: 'ल' },
+  { key: 'w', val: 'व' },
+  { key: 'W', val: 'व' },
+  { key: 's', val: 'स' }, // Dental Sa -> स
+  { key: 'S', val: 'ष' }, // Capital S -> ष
+  { key: 'h', val: 'ह' },
+  { key: 'H', val: 'ह' },
+  { key: 'x', val: 'क्ष' },
+  { key: 'X', val: 'क्ष' },
+  { key: 'q', val: 'क' },
+  { key: 'c', val: 'च' }
+];
 
 // ====================================================
 // 2. Romanized English -> Nepali Unicode Transliteration
 // ====================================================
 function romanizedWordToUnicode(rawWord: string): string {
+  if (nepaliDictionary[rawWord]) {
+    return nepaliDictionary[rawWord];
+  }
   const lower = rawWord.toLowerCase();
-  if (nepaliDictionary[lower]) {
+  if (nepaliDictionary[lower] && rawWord[0] === rawWord[0].toUpperCase() && rawWord.slice(1) === rawWord.slice(1).toLowerCase()) {
     return nepaliDictionary[lower];
   }
 
@@ -180,12 +370,9 @@ function romanizedWordToUnicode(rawWord: string): string {
 
   while (i < len) {
     const isStart = (i === 0);
-    const c3 = rawWord.substring(i, i + 3).toLowerCase();
-    const c2 = rawWord.substring(i, i + 2).toLowerCase();
-    const c1 = rawWord.substring(i, i + 1);
-    const c1Lower = c1.toLowerCase();
+    const c1 = rawWord[i];
 
-    // Check numbers
+    // Numbers
     if (/[0-9]/.test(c1)) {
       const numMap: Record<string, string> = {
         '0':'०','1':'१','2':'२','3':'३','4':'४','5':'५','6':'६','7':'७','8':'८','9':'९'
@@ -195,59 +382,106 @@ function romanizedWordToUnicode(rawWord: string): string {
       continue;
     }
 
-    // Check punctuation
+    // Special Diacritics
+    if (c1 === '~' || (c1 === '*' && rawWord[i+1] === '*')) {
+      out += 'ँ';
+      i += (c1 === '*' ? 2 : 1);
+      continue;
+    }
+    if (c1 === '*' || (c1 === 'M' && !isStart && out.length > 0 && !out.endsWith(' '))) {
+      out += 'ं';
+      i += 1;
+      continue;
+    }
+    if (c1 === ':' || (c1 === 'H' && isStart === false && (i === len - 1 || rawWord[i+1] === ' '))) {
+      out += 'ः';
+      i += 1;
+      continue;
+    }
+    if (c1 === '_' || c1 === '\\') {
+      out += '्';
+      i += 1;
+      continue;
+    }
+    if (c1 === '.') {
+      if (rawWord[i+1] === '.') {
+        out += '..';
+        i += 2;
+      } else {
+        out += '।';
+        i += 1;
+      }
+      continue;
+    }
+
     if (/[.,!?;:\-()"'\/]/.test(c1)) {
-      if (c1 === '.') out += '।';
-      else out += c1;
+      out += c1;
       i += 1;
       continue;
     }
 
-    // Check independent vowels
-    if (isStart || out.endsWith(' ') || out.length === 0) {
-      if (phoneticVowels[c2]) {
-        out += phoneticVowels[c2];
-        i += 2;
-        continue;
+    // Independent Vowels at word start or after space
+    if (isStart || out.endsWith(' ') || out.endsWith('।') || out.length === 0) {
+      let matchedVowel: string | null = null;
+      let vLen = 0;
+      if (i + 2 <= len) {
+        const sub2 = rawWord.substring(i, i + 2);
+        if (independentVowels[sub2]) {
+          matchedVowel = independentVowels[sub2];
+          vLen = 2;
+        }
       }
-      if (phoneticVowels[c1Lower]) {
-        out += phoneticVowels[c1Lower];
-        i += 1;
+      if (!matchedVowel && independentVowels[c1]) {
+        matchedVowel = independentVowels[c1];
+        vLen = 1;
+      }
+      if (matchedVowel) {
+        out += matchedVowel;
+        i += vLen;
         continue;
       }
     }
 
-    // Match consonants
-    let matchedConsonant: string | null = null;
-    let consLen = 0;
-
-    if (phoneticConsonants[c3]) {
-      matchedConsonant = phoneticConsonants[c3];
-      consLen = 3;
-    } else if (phoneticConsonants[c2]) {
-      matchedConsonant = phoneticConsonants[c2];
-      consLen = 2;
-    } else if (phoneticConsonants[c1Lower]) {
-      matchedConsonant = phoneticConsonants[c1Lower];
-      consLen = 1;
+    // Match Consonants
+    let matchedCons: string | null = null;
+    let cLen = 0;
+    for (const item of consonantsList) {
+      if (rawWord.startsWith(item.key, i)) {
+        matchedCons = item.val;
+        cLen = item.key.length;
+        break;
+      }
     }
 
-    if (matchedConsonant) {
-      i += consLen;
-      const next2 = rawWord.substring(i, i + 2).toLowerCase();
-      const next1 = rawWord.substring(i, i + 1).toLowerCase();
+    if (matchedCons) {
+      i += cLen;
+      // Check for following vowel matra
+      let matchedMatra: string | null = null;
+      let mLen = 0;
 
-      if (phoneticMatras[next2] !== undefined) {
-        out += matchedConsonant + phoneticMatras[next2];
-        i += 2;
-      } else if (phoneticMatras[next1] !== undefined) {
-        out += matchedConsonant + phoneticMatras[next1];
-        i += 1;
+      if (i + 2 <= len) {
+        const sub2 = rawWord.substring(i, i + 2);
+        if (phoneticMatras[sub2] !== undefined) {
+          matchedMatra = phoneticMatras[sub2];
+          mLen = 2;
+        }
+      }
+      if (matchedMatra === null && i < len) {
+        const sub1 = rawWord.substring(i, i + 1);
+        if (phoneticMatras[sub1] !== undefined) {
+          matchedMatra = phoneticMatras[sub1];
+          mLen = 1;
+        }
+      }
+
+      if (matchedMatra !== null) {
+        out += matchedCons + matchedMatra;
+        i += mLen;
       } else {
         if (i >= len) {
-          out += matchedConsonant;
+          out += matchedCons;
         } else {
-          out += matchedConsonant + '्';
+          out += matchedCons + '्';
         }
       }
       continue;
@@ -262,7 +496,7 @@ function romanizedWordToUnicode(rawWord: string): string {
 
 function convertEnglishToUnicode(text: string): string {
   if (!text) return '';
-  return text.replace(/[A-Za-z0-9]+/g, (word) => romanizedWordToUnicode(word));
+  return text.replace(/[A-Za-z0-9_*~:\\]+|[^\sA-Za-z0-9_*~:\\]+/g, (word) => romanizedWordToUnicode(word));
 }
 
 // ==========================================
@@ -599,7 +833,20 @@ export default function ToolsPage({ activeCategory = 'all', onSelectCategory }: 
   
   const [copiedUnicode, setCopiedUnicode] = useState(false);
   const [copiedPreeti, setCopiedPreeti] = useState(false);
-  const [showCheatsheet, setShowCheatsheet] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [instructionTab, setInstructionTab] = useState<'all' | 'retroflex' | 'sha' | 'conjuncts' | 'diacritics'>('all');
+
+  const handleInsertSpecialChar = (code: string) => {
+    if (converterMode === 'englishToAll') {
+      setEnglishInput((prev) => {
+        if (!prev) return code;
+        return prev + (prev.endsWith(' ') ? '' : ' ') + code;
+      });
+    } else if (converterMode === 'unicodeToPreeti') {
+      const uni = convertEnglishToUnicode(code);
+      setDirectUnicodeInput((prev) => prev + uni);
+    }
+  };
 
   // Synchronized dynamic calculations based on current active mode
   const { displayUnicode, displayPreeti } = useMemo(() => {
@@ -903,14 +1150,14 @@ export default function ToolsPage({ activeCategory = 'all', onSelectCategory }: 
               className="relative w-full max-w-6xl glass border border-purple-500/30 rounded-3xl overflow-hidden shadow-2xl z-10 flex flex-col my-auto max-h-[94vh]"
             >
               {/* Top Modal Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/[0.02]">
+              <div className="flex flex-wrap items-center justify-between px-6 py-3.5 border-b border-white/10 bg-white/[0.02] gap-3">
                 <div className="flex items-center gap-3">
                   <div className="p-2.5 rounded-2xl bg-purple-500/20 text-purple-300 border border-purple-500/30 shadow-inner">
                     <Languages className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-display font-bold text-white text-base md:text-lg">
+                      <h3 className="font-display font-bold text-white text-base md:text-lg title-purple">
                         Romanized Nepali ➔ Unicode ➔ Preeti Converter
                       </h3>
                       <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 text-[10px] font-mono font-semibold">
@@ -923,39 +1170,14 @@ export default function ToolsPage({ activeCategory = 'all', onSelectCategory }: 
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setShowCheatsheet(!showCheatsheet)}
-                    className={`px-3 py-1.5 rounded-xl border text-xs font-mono flex items-center gap-1.5 transition-all ${
-                      showCheatsheet 
-                        ? 'bg-purple-600/30 border-purple-500 text-purple-200' 
-                        : 'border-white/10 bg-white/5 text-zinc-400 hover:text-white'
-                    }`}
-                    title="Toggle Phonetic Key Guide"
-                  >
-                    <Keyboard className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Phonetic Key Guide</span>
-                  </button>
-
-                  <button
-                    onClick={() => setIsUnicodeModalOpen(false)}
-                    className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition-colors"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Mode Switcher & Quick Samples Bar */}
-              <div className="px-6 py-3 bg-black/50 border-b border-white/5 flex flex-wrap items-center justify-between gap-4">
-                {/* Modes */}
-                <div className="flex items-center gap-1.5 bg-white/[0.04] p-1 rounded-2xl border border-white/10">
+                {/* Mode Selector in Header */}
+                <div className="flex items-center gap-1 bg-white/[0.05] p-1 rounded-2xl border border-white/10 mode-toggle-container">
                   <button
                     onClick={() => setConverterMode('englishToAll')}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                       converterMode === 'englishToAll'
                         ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
-                        : 'text-zinc-400 hover:text-white'
+                        : 'mode-btn-inactive text-zinc-400 hover:text-white'
                     }`}
                   >
                     English (Romanized) ➔ All
@@ -963,10 +1185,10 @@ export default function ToolsPage({ activeCategory = 'all', onSelectCategory }: 
 
                   <button
                     onClick={() => setConverterMode('unicodeToPreeti')}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                       converterMode === 'unicodeToPreeti'
                         ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
-                        : 'text-zinc-400 hover:text-white'
+                        : 'mode-btn-inactive text-zinc-400 hover:text-white'
                     }`}
                   >
                     Unicode ➔ Preeti
@@ -974,111 +1196,506 @@ export default function ToolsPage({ activeCategory = 'all', onSelectCategory }: 
 
                   <button
                     onClick={() => setConverterMode('preetiToUnicode')}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                       converterMode === 'preetiToUnicode'
                         ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
-                        : 'text-zinc-400 hover:text-white'
+                        : 'mode-btn-inactive text-zinc-400 hover:text-white'
                     }`}
                   >
                     Preeti ➔ Unicode
                   </button>
                 </div>
 
-                {/* Quick Sample Buttons */}
-                <div className="flex flex-wrap items-center gap-2 text-xs">
-                  <span className="text-zinc-500 font-mono text-[10px] uppercase">Quick Samples:</span>
+                <div className="flex items-center gap-2">
                   <button
-                    onClick={() => {
-                      if (converterMode === 'englishToAll') setEnglishInput('Nepali');
-                      else if (converterMode === 'unicodeToPreeti') setDirectUnicodeInput('नेपाली');
-                      else setDirectPreetiInput('g]kfnL');
-                    }}
-                    className="px-2.5 py-1 rounded-lg bg-purple-950/40 hover:bg-purple-900/60 text-purple-300 text-xs border border-purple-500/20 transition-all font-mono"
+                    onClick={() => setShowInstructions(!showInstructions)}
+                    className={`px-3.5 py-1.5 rounded-xl border text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer ${
+                      showInstructions 
+                        ? 'bg-purple-600 border-purple-400 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]' 
+                        : 'border-purple-500/40 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 hover:text-white'
+                    }`}
+                    title="Typing Instructions for Special Letters (ट, श, ष, etc.)"
                   >
-                    "Nepali"
+                    <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+                    <span className="font-semibold">Instructions & Letters Guide</span>
+                    {showInstructions ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                   </button>
 
                   <button
-                    onClick={() => {
-                      if (converterMode === 'englishToAll') setEnglishInput('namaste sabailai');
-                      else if (converterMode === 'unicodeToPreeti') setDirectUnicodeInput('नमस्ते सबैलाई');
-                      else setDirectPreetiInput('gd:t] ;a}nfO{');
-                    }}
-                    className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 text-xs border border-white/5 transition-all font-mono"
+                    onClick={() => setIsUnicodeModalOpen(false)}
+                    className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
                   >
-                    "namaste"
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      if (converterMode === 'englishToAll') setEnglishInput('mero desh nepal sundar chha.');
-                      else if (converterMode === 'unicodeToPreeti') setDirectUnicodeInput('मेरो देश नेपाल सुन्दर छ।');
-                      else setDirectPreetiInput("d]/f] b]z g]kfn ;'Gb/ 5 .");
-                    }}
-                    className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 text-xs border border-white/5 transition-all font-mono"
-                  >
-                    "mero desh nepal"
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setEnglishInput('');
-                      setDirectUnicodeInput('');
-                      setDirectPreetiInput('');
-                    }}
-                    className="p-1.5 rounded-lg text-zinc-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
-                    title="Clear All"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
               </div>
 
-              {/* Phonetic Cheatsheet Drawer */}
+              {/* Expandable Comprehensive Typing Instructions & Special Characters Guide */}
               <AnimatePresence>
-                {showCheatsheet && (
+                {showInstructions && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden bg-purple-950/20 border-b border-purple-500/20 px-6 py-4 text-xs font-mono text-zinc-300 space-y-2"
+                    transition={{ duration: 0.25 }}
+                    className="overflow-hidden instructions-drawer bg-[#0a0a0f] border-b border-purple-500/30 shadow-2xl transition-colors"
                   >
-                    <div className="flex items-center justify-between text-purple-300 font-semibold mb-2">
-                      <span className="flex items-center gap-1.5">
-                        <HelpCircle className="w-4 h-4" />
-                        Phonetic Romanized Typing Map
-                      </span>
-                      <button onClick={() => setShowCheatsheet(false)} className="text-[11px] text-zinc-400 hover:text-white">
-                        Hide
-                      </button>
+                    {/* Drawer Header & Subcategory Tabs Bar */}
+                    <div className="px-6 py-3 border-b border-purple-500/20 bg-black/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 text-purple-300 title-purple font-bold text-sm shrink-0">
+                        <Zap className="w-4 h-4 text-purple-400" />
+                        <span>Phonetic Typing Rules for Special Nepali Characters</span>
+                      </div>
+
+                      {/* Filter Subcategory Tabs */}
+                      <div className="flex items-center gap-1.5 bg-white/[0.04] p-1.5 rounded-xl border border-white/10 text-[11px] overflow-x-auto subcat-scroll-slider whitespace-nowrap max-w-full">
+                        <button
+                          onClick={() => setInstructionTab('all')}
+                          className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer shrink-0 ${
+                            instructionTab === 'all' 
+                              ? 'bg-purple-600 text-white font-semibold shadow-sm' 
+                              : 'subcat-tab-inactive text-zinc-400 hover:text-white'
+                          }`}
+                        >
+                          ⭐ All Rules (All 4 Subcategories)
+                        </button>
+                        <button
+                          onClick={() => setInstructionTab('retroflex')}
+                          className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer shrink-0 ${
+                            instructionTab === 'retroflex' 
+                              ? 'bg-purple-600 text-white font-semibold shadow-sm' 
+                              : 'subcat-tab-inactive text-zinc-400 hover:text-white'
+                          }`}
+                        >
+                          🎯 1. ट, ठ, ड, ढ, ण
+                        </button>
+                        <button
+                          onClick={() => setInstructionTab('sha')}
+                          className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer shrink-0 ${
+                            instructionTab === 'sha' 
+                              ? 'bg-purple-600 text-white font-semibold shadow-sm' 
+                              : 'subcat-tab-inactive text-zinc-400 hover:text-white'
+                          }`}
+                        >
+                          ✨ 2. The 3 "Sha" (श, ष, स)
+                        </button>
+                        <button
+                          onClick={() => setInstructionTab('conjuncts')}
+                          className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer shrink-0 ${
+                            instructionTab === 'conjuncts' 
+                              ? 'bg-purple-600 text-white font-semibold shadow-sm' 
+                              : 'subcat-tab-inactive text-zinc-400 hover:text-white'
+                          }`}
+                        >
+                          🔗 3. Joint Letters (ज्ञ, क्ष, त्र, श्र)
+                        </button>
+                        <button
+                          onClick={() => setInstructionTab('diacritics')}
+                          className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer shrink-0 ${
+                            instructionTab === 'diacritics' 
+                              ? 'bg-purple-600 text-white font-semibold shadow-sm' 
+                              : 'subcat-tab-inactive text-zinc-400 hover:text-white'
+                          }`}
+                        >
+                          🔹 4. Diacritics (ँ, ं, ः, ।)
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-[11px]">
-                      <div className="p-2 rounded-xl bg-black/40 border border-white/5">
-                        <span className="text-purple-400 font-bold">k/kh/g/gh</span> ➔ क ख ग घ
-                      </div>
-                      <div className="p-2 rounded-xl bg-black/40 border border-white/5">
-                        <span className="text-purple-400 font-bold">ch/chh/j/jh</span> ➔ च छ ज झ
-                      </div>
-                      <div className="p-2 rounded-xl bg-black/40 border border-white/5">
-                        <span className="text-purple-400 font-bold">t/th/d/dh/n</span> ➔ त थ द ध न
-                      </div>
-                      <div className="p-2 rounded-xl bg-black/40 border border-white/5">
-                        <span className="text-purple-400 font-bold">p/ph/b/bh/m</span> ➔ प फ ब भ म
-                      </div>
-                      <div className="p-2 rounded-xl bg-black/40 border border-white/5">
-                        <span className="text-purple-400 font-bold">sh/s/h/gya</span> ➔ श स ह ज्ञ
-                      </div>
-                      <div className="p-2 rounded-xl bg-black/40 border border-white/5">
-                        <span className="text-purple-400 font-bold">aa/i/ee/u/oo</span> ➔ आ इ ई उ ऊ
-                      </div>
+                    {/* SINGLE UNIFIED VERTICAL SCROLLBAR CONTAINER FOR ALL FOUR SUBCATEGORIES */}
+                    <div className="max-h-[380px] md:max-h-[440px] overflow-y-auto px-6 py-5 text-xs font-mono space-y-6 pr-3 subcat-scroll-slider">
+                      
+                      {/* Subcategory 1: Retroflex */}
+                      {(instructionTab === 'all' || instructionTab === 'retroflex') && (
+                        <div className="p-4 sm:p-5 rounded-2xl card-purple bg-purple-950/20 border border-purple-500/20 space-y-3">
+                          <div className="flex items-center justify-between border-b border-purple-500/20 pb-2">
+                            <h4 className="title-purple text-purple-300 font-bold text-sm sm:text-base flex items-center gap-2">
+                              <span>🎯 1. Hard Retroflex Consonants (मूर्धन्य वर्ण: ट, ठ, ड, ढ, ण)</span>
+                            </h4>
+                            <span className="text-[10px] text-zinc-400 font-sans">Capital Key Rule</span>
+                          </div>
+
+                          <p className="text-xs text-zinc-300 leading-relaxed">
+                            Nepali has two distinct sets of 'T/D/N' sounds. Use <strong>Capital English Letters</strong> (<code className="text-purple-300">T</code>, <code className="text-purple-300">Th</code>, <code className="text-purple-300">D</code>, <code className="text-purple-300">Dh</code>, <code className="text-purple-300">N</code>) for hard retroflex letters where the tongue curls back, and small letters (<code className="text-zinc-400">t</code>, <code className="text-zinc-400">th</code>, <code className="text-zinc-400">d</code>, <code className="text-zinc-400">dh</code>, <code className="text-zinc-400">n</code>) for soft dental letters.
+                          </p>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <span className="font-bold text-purple-300 text-sm">T ➔ ट</span>
+                                <span className="text-[10px] text-zinc-400">Retroflex Ta</span>
+                              </div>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>Topi</code> ➔ <strong>टोपी</strong><br/>
+                                <code>Tamatar</code> ➔ <strong>टमाटर</strong><br/>
+                                <code>Ticket</code> ➔ <strong>टिकट</strong>
+                              </p>
+                              <div className="text-[10px] text-zinc-500 pt-1 border-t border-white/5">
+                                (Small <code>topi</code> gives <code>तोपि</code>)
+                              </div>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <span className="font-bold text-purple-300 text-sm">Th ➔ ठ</span>
+                                <span className="text-[10px] text-zinc-400">Retroflex Tha</span>
+                              </div>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>Thik</code> ➔ <strong>ठीक</strong><br/>
+                                <code>Thela</code> ➔ <strong>ठेला</strong><br/>
+                                <code>Thulo</code> ➔ <strong>ठूलो</strong>
+                              </p>
+                              <div className="text-[10px] text-zinc-500 pt-1 border-t border-white/5">
+                                (Small <code>thik</code> gives <code>थीक</code>)
+                              </div>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <span className="font-bold text-purple-300 text-sm">D ➔ ड</span>
+                                <span className="text-[10px] text-zinc-400">Retroflex Da</span>
+                              </div>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>Dallaa</code> ➔ <strong>डल्ला</strong><br/>
+                                <code>Dami</code> ➔ <strong>डामी</strong><br/>
+                                <code>Doctor</code> ➔ <strong>डाक्टर</strong>
+                              </p>
+                              <div className="text-[10px] text-zinc-500 pt-1 border-t border-white/5">
+                                (Small <code>dami</code> gives <code>दामी</code>)
+                              </div>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <span className="font-bold text-purple-300 text-sm">Dh ➔ ढ</span>
+                                <span className="text-[10px] text-zinc-400">Retroflex Dha</span>
+                              </div>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>Dhal</code> ➔ <strong>ढाल</strong><br/>
+                                <code>Dhoka</code> ➔ <strong>ढोका</strong><br/>
+                                <code>Dhilo</code> ➔ <strong>ढिलो</strong>
+                              </p>
+                              <div className="text-[10px] text-zinc-500 pt-1 border-t border-white/5">
+                                (Small <code>dhal</code> gives <code>धाल</code>)
+                              </div>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <span className="font-bold text-purple-300 text-sm">N ➔ ण</span>
+                                <span className="text-[10px] text-zinc-400">Retroflex Na</span>
+                              </div>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>BaaN</code> ➔ <strong>बाण</strong><br/>
+                                <code>GuNa</code> ➔ <strong>गुण</strong><br/>
+                                <code>krishNa</code> ➔ <strong>कृष्ण</strong>
+                              </p>
+                              <div className="text-[10px] text-zinc-500 pt-1 border-t border-white/5">
+                                (Small <code>guna</code> gives <code>गुन</code>)
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Subcategory 2: The Three Shas */}
+                      {(instructionTab === 'all' || instructionTab === 'sha') && (
+                        <div className="p-4 sm:p-5 rounded-2xl card-fuchsia bg-fuchsia-950/20 border border-fuchsia-500/20 space-y-3">
+                          <div className="flex items-center justify-between border-b border-fuchsia-500/20 pb-2">
+                            <h4 className="title-fuchsia text-fuchsia-300 font-bold text-sm sm:text-base flex items-center gap-2">
+                              <span>✨ 2. The Three "Sha" Rules (श, ष, स)</span>
+                            </h4>
+                            <span className="text-[10px] text-zinc-400 font-sans">Sibilant Distinction</span>
+                          </div>
+
+                          <p className="text-xs text-zinc-300 leading-relaxed">
+                            Nepali Devanagari has three distinct sibilant letters: <strong>तालव्य श</strong>, <strong>मूर्धन्य ष</strong>, and <strong>दन्त्य स</strong>:
+                          </p>
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-2">
+                              <div className="font-bold text-fuchsia-300 text-sm">
+                                1. sh / sha ➔ श (तालव्य)
+                              </div>
+                              <p className="text-[11px] text-zinc-300 leading-relaxed">
+                                Used in common words with soft palatal 'sh':<br/>
+                                • <code>shanti</code> ➔ <strong>शान्ति</strong><br/>
+                                • <code>desh</code> ➔ <strong>देश</strong><br/>
+                                • <code>shankar</code> ➔ <strong>शंकर</strong><br/>
+                                • <code>shakti</code> ➔ <strong>शक्ति</strong><br/>
+                                • <code>shree</code> ➔ <strong>श्री</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-2">
+                              <div className="font-bold text-fuchsia-300 text-sm">
+                                2. Sh / shh / S ➔ ष (मूर्धन्य)
+                              </div>
+                              <p className="text-[11px] text-zinc-300 leading-relaxed">
+                                Used in Sanskrit words with retroflex 'sh':<br/>
+                                • <code>kaShta</code> / <code>kashta</code> ➔ <strong>कष्ट</strong><br/>
+                                • <code>viShesh</code> ➔ <strong>विशेष</strong><br/>
+                                • <code>dhanuSh</code> ➔ <strong>धनुष</strong><br/>
+                                • <code>krishNa</code> ➔ <strong>कृष्ण</strong><br/>
+                                • <code>viShNu</code> ➔ <strong>विष्णु</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-2">
+                              <div className="font-bold text-fuchsia-300 text-sm">
+                                3. s / sa ➔ स (दन्त्य)
+                              </div>
+                              <p className="text-[11px] text-zinc-300 leading-relaxed">
+                                Used for general dental 's' sound:<br/>
+                                • <code>sansar</code> ➔ <strong>संसार</strong><br/>
+                                • <code>sathi</code> ➔ <strong>साथी</strong><br/>
+                                • <code>samaya</code> ➔ <strong>समय</strong><br/>
+                                • <code>sundar</code> ➔ <strong>सुन्दर</strong><br/>
+                                • <code>sabai</code> ➔ <strong>सबै</strong>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Subcategory 3: Joint Letters */}
+                      {(instructionTab === 'all' || instructionTab === 'conjuncts') && (
+                        <div className="p-4 sm:p-5 rounded-2xl card-emerald bg-emerald-950/20 border border-emerald-500/20 space-y-3">
+                          <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2">
+                            <h4 className="title-emerald text-emerald-300 font-bold text-sm sm:text-base flex items-center gap-2">
+                              <span>🔗 3. Joint Conjuncts & Special Letters (संयुक्त वर्ण)</span>
+                            </h4>
+                            <span className="text-[10px] text-zinc-400 font-sans">Compound Letters</span>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                              <span className="font-bold text-emerald-300">gy / gya ➔ ज्ञ</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>gyan</code> ➔ <strong>ज्ञान</strong><br/>
+                                <code>vigyan</code> ➔ <strong>विज्ञान</strong><br/>
+                                <code>agyaani</code> ➔ <strong>अज्ञानी</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                              <span className="font-bold text-emerald-300">ksh / x ➔ क्ष</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>kshamata</code> ➔ <strong>क्षमता</strong><br/>
+                                <code>raksha</code> ➔ <strong>रक्षा</strong><br/>
+                                <code>kshetra</code> ➔ <strong>क्षेत्र</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                              <span className="font-bold text-emerald-300">tr ➔ त्र</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>patra</code> ➔ <strong>पत्र</strong><br/>
+                                <code>chitra</code> ➔ <strong>चित्र</strong><br/>
+                                <code>ratri</code> ➔ <strong>रात्रि</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                              <span className="font-bold text-emerald-300">shr / shree ➔ श्र / श्री</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>shree</code> ➔ <strong>श्री</strong><br/>
+                                <code>shram</code> ➔ <strong>श्रम</strong><br/>
+                                <code>vishram</code> ➔ <strong>विश्राम</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                              <span className="font-bold text-emerald-300">dhy ➔ ध्य</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>dhanyabad</code> ➔ <strong>धन्यवाद</strong><br/>
+                                <code>dhyan</code> ➔ <strong>ध्यान</strong><br/>
+                                <code>madhya</code> ➔ <strong>मध्य</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                              <span className="font-bold text-emerald-300">ddh ➔ द्ध</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>buddha</code> ➔ <strong>बुद्ध</strong><br/>
+                                <code>shuddha</code> ➔ <strong>शुद्ध</strong><br/>
+                                <code>vriddhi</code> ➔ <strong>वृद्धि</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                              <span className="font-bold text-emerald-300">dy ➔ द्य</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>vidya</code> ➔ <strong>विद्या</strong><br/>
+                                <code>vidyalaya</code> ➔ <strong>विद्यालय</strong><br/>
+                                <code>udyami</code> ➔ <strong>उद्यमी</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                              <span className="font-bold text-emerald-300">tt / sth ➔ त्त / स्थ</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>uttar</code> ➔ <strong>उत्तर</strong><br/>
+                                <code>sthan</code> ➔ <strong>स्थान</strong><br/>
+                                <code>swasthya</code> ➔ <strong>स्वास्थ्य</strong>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Subcategory 4: Diacritics */}
+                      {(instructionTab === 'all' || instructionTab === 'diacritics') && (
+                        <div className="p-4 sm:p-5 rounded-2xl card-sky bg-sky-950/20 border border-sky-500/20 space-y-3">
+                          <div className="flex items-center justify-between border-b border-sky-500/20 pb-2">
+                            <h4 className="title-sky text-sky-300 font-bold text-sm sm:text-base flex items-center gap-2">
+                              <span>🔹 4. Diacritics, Punctuation & Half-Letters (चन्द्रबिन्दु, शिरबिन्दु, विसर्ग, हलन्त)</span>
+                            </h4>
+                            <span className="text-[10px] text-zinc-400 font-sans">Special Markers</span>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1.5">
+                              <span className="font-bold text-sky-300 text-sm">~ or ** ➔ ँ</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>kahaa~</code> ➔ <strong>कहाँ</strong><br/>
+                                <code>tapaaii~</code> ➔ <strong>तपाईं</strong><br/>
+                                <code>yahaa~</code> ➔ <strong>यहाँ</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1.5">
+                              <span className="font-bold text-sky-300 text-sm">M or * ➔ ं</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>saMskriti</code> ➔ <strong>संस्कृति</strong><br/>
+                                <code>raM</code> ➔ <strong>रं</strong><br/>
+                                <code>aMka</code> ➔ <strong>अंक</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1.5">
+                              <span className="font-bold text-sky-300 text-sm">: or H ➔ ः</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>duHkha</code> ➔ <strong>दुःख</strong><br/>
+                                <code>antaH</code> ➔ <strong>अन्तः</strong><br/>
+                                <code>prataH</code> ➔ <strong>प्रातः</strong>
+                              </p>
+                            </div>
+
+                            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1.5">
+                              <span className="font-bold text-sky-300 text-sm">. ➔ ।</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>.</code> ➔ <strong>।</strong> (दण्डा)<br/>
+                                <code>..</code> ➔ <strong>।।</strong> (डबल)
+                              </p>
+                            </div>
+
+                            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1.5">
+                              <span className="font-bold text-sky-300 text-sm">_ or \ ➔ ्</span>
+                              <p className="text-[11px] text-zinc-300">
+                                <code>k_</code> ➔ <strong>क्</strong> (हलन्त)<br/>
+                                <code>s_</code> ➔ <strong>स्</strong>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
 
               {/* Synchronized 3-Box / Dual-Box Grid */}
-              <div className="p-6 overflow-y-auto flex-1">
+              <div className="p-6 overflow-y-auto flex-1 space-y-4">
+                
+                {/* Unified Quick Controls Toolbar: Special Letters + Samples */}
+                <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl quick-insert-strip bg-white/[0.02] border border-white/10 text-xs font-mono">
+                  
+                  {/* Left: Quick Insert Special Letters */}
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-[10px] uppercase tracking-wider text-purple-300 font-semibold flex items-center gap-1 mr-1 shrink-0">
+                      <Sparkles className="w-3 h-3 text-purple-400" />
+                      Quick Insert:
+                    </span>
+                    {[
+                      { label: 'ट (T)', code: 'T' },
+                      { label: 'ठ (Th)', code: 'Th' },
+                      { label: 'ड (D)', code: 'D' },
+                      { label: 'ढ (Dh)', code: 'Dh' },
+                      { label: 'ण (N)', code: 'N' },
+                      { label: 'श (sh)', code: 'sh' },
+                      { label: 'ष (Sh)', code: 'Sh' },
+                      { label: 'स (s)', code: 's' },
+                      { label: 'ज्ञ (gya)', code: 'gya' },
+                      { label: 'क्ष (ksh)', code: 'ksh' },
+                      { label: 'त्र (tr)', code: 'tr' },
+                      { label: 'श्री (shree)', code: 'shree' },
+                      { label: 'ँ (~)', code: '~' },
+                      { label: 'ं (M)', code: 'M' },
+                      { label: 'ः (H)', code: 'H' },
+                      { label: '। (.)', code: '.' },
+                      { label: '् (_)', code: '_' },
+                    ].map((item) => (
+                      <button
+                        key={item.code}
+                        type="button"
+                        onClick={() => handleInsertSpecialChar(item.code)}
+                        title={`Click to insert ${item.label}`}
+                        className="px-2.5 py-1 rounded-lg quick-insert-btn bg-purple-950/30 hover:bg-purple-600 hover:text-white text-purple-200 border border-purple-500/20 text-xs font-mono font-medium transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Right: Quick Samples & Clear */}
+                  <div className="flex flex-wrap items-center gap-1.5 ml-auto">
+                    <span className="text-zinc-500 font-mono text-[10px] uppercase shrink-0">Samples:</span>
+                    <button
+                      onClick={() => {
+                        if (converterMode === 'englishToAll') setEnglishInput('Nepali');
+                        else if (converterMode === 'unicodeToPreeti') setDirectUnicodeInput('नेपाली');
+                        else setDirectPreetiInput('g]kfnL');
+                      }}
+                      className="px-2 py-0.5 rounded-lg quick-sample-btn bg-purple-950/40 hover:bg-purple-900/60 text-purple-300 text-[11px] border border-purple-500/20 transition-all font-mono cursor-pointer"
+                    >
+                      "Nepali"
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (converterMode === 'englishToAll') setEnglishInput('namaste sabailai');
+                        else if (converterMode === 'unicodeToPreeti') setDirectUnicodeInput('नमस्ते सबैलाई');
+                        else setDirectPreetiInput('gd:t] ;a}nfO{');
+                      }}
+                      className="px-2 py-0.5 rounded-lg quick-sample-btn-muted bg-white/5 hover:bg-white/10 text-zinc-300 text-[11px] border border-white/5 transition-all font-mono cursor-pointer"
+                    >
+                      "namaste"
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (converterMode === 'englishToAll') setEnglishInput('Topi, shanti ra gyan sundar chha.');
+                        else if (converterMode === 'unicodeToPreeti') setDirectUnicodeInput('टोपी, शान्ति र ज्ञान सुन्दर छ।');
+                        else setDirectPreetiInput("6f]kL, zflGt / 1fg ;'Gb/ 5 .");
+                      }}
+                      className="px-2 py-0.5 rounded-lg quick-sample-btn-muted bg-white/5 hover:bg-white/10 text-zinc-300 text-[11px] border border-white/5 transition-all font-mono cursor-pointer"
+                    >
+                      "Topi, shanti"
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEnglishInput('');
+                        setDirectUnicodeInput('');
+                        setDirectPreetiInput('');
+                      }}
+                      className="p-1 rounded-lg text-zinc-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                      title="Clear All"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
                 {converterMode === 'englishToAll' ? (
                   /* 3-Box Tri-Panel Synchronized View */
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
@@ -1088,7 +1705,7 @@ export default function ToolsPage({ activeCategory = 'all', onSelectCategory }: 
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-mono uppercase tracking-wider text-purple-300 font-semibold flex items-center gap-1.5">
                           <Keyboard className="w-4 h-4 text-purple-400" />
-                          1. Type in English
+                          1. Type in English (Romanized)
                         </span>
                         <span className="text-[10px] font-mono text-zinc-500">
                           {englishInput.length} chars
@@ -1100,11 +1717,11 @@ export default function ToolsPage({ activeCategory = 'all', onSelectCategory }: 
                           rows={8}
                           value={englishInput}
                           onChange={(e) => setEnglishInput(e.target.value)}
-                          placeholder="Type in English (e.g. Nepali, namaste, mero desh nepal, kasto chha)..."
+                          placeholder="Type in English (e.g. Topi, Tamatar, shanti, gyan, kshamata, namaste)..."
                           className="w-full h-64 p-4 bg-white/[0.02] border border-white/10 rounded-2xl text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-purple-500/60 focus:bg-white/[0.04] transition-all resize-none font-sans leading-relaxed shadow-inner"
                         />
                         <span className="absolute bottom-3 left-4 text-[10px] font-mono text-purple-400/80 bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-500/20">
-                          Live Phonetic Engine
+                          Live Phonetic Engine (T=ट, Th=ठ, sh=श, Sh=ष)
                         </span>
                       </div>
                     </div>

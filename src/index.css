@@ -381,6 +381,203 @@ html.light code {
   color: #0f172a;
 }
 
+/* =========================================================
+   TOOLS MODAL & INSTRUCTIONS DRAWER (Light Theme)
+   ========================================================= */
+html.light .instructions-drawer {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+html.light .instructions-drawer p,
+html.light .instructions-drawer span,
+html.light .instructions-drawer li {
+  color: #1e293b !important;
+}
+
+html.light .instructions-drawer .text-zinc-400,
+html.light .instructions-drawer .text-zinc-500 {
+  color: #64748b !important;
+}
+
+html.light .card-purple {
+  background-color: #faf5ff !important;
+  border-color: #e9d5ff !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.05);
+}
+
+html.light .card-fuchsia {
+  background-color: #fdf4ff !important;
+  border-color: #f5d0fe !important;
+  box-shadow: 0 4px 12px rgba(192, 38, 211, 0.05);
+}
+
+html.light .card-emerald {
+  background-color: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.05);
+}
+
+html.light .card-sky {
+  background-color: #f0f9ff !important;
+  border-color: #bae6fd !important;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.05);
+}
+
+html.light .title-purple {
+  color: #6b21a8 !important;
+  border-color: #e9d5ff !important;
+}
+
+html.light .title-fuchsia {
+  color: #86198f !important;
+  border-color: #f5d0fe !important;
+}
+
+html.light .title-emerald {
+  color: #065f46 !important;
+  border-color: #bbf7d0 !important;
+}
+
+html.light .title-sky {
+  color: #075985 !important;
+  border-color: #bae6fd !important;
+}
+
+html.light .instructions-drawer code {
+  background-color: #ede9fe !important;
+  color: #581c87 !important;
+  border: 1px solid #ddd6fe !important;
+  padding: 1.5px 5px !important;
+  border-radius: 6px !important;
+  font-weight: 700 !important;
+}
+
+html.light .quick-insert-strip {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light .quick-insert-btn {
+  background-color: #f3e8ff !important;
+  border-color: #e9d5ff !important;
+  color: #6b21a8 !important;
+}
+
+html.light .quick-insert-btn:hover {
+  background-color: #7c3aed !important;
+  border-color: #7c3aed !important;
+  color: #ffffff !important;
+}
+
+html.light .subcat-tab-inactive {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #475569 !important;
+}
+
+/* =========================================================
+   VISIBLE SUBCATEGORY SCROLL SLIDER
+   ========================================================= */
+.subcat-scroll-slider {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 85, 247, 0.6) rgba(255, 255, 255, 0.05);
+}
+
+.subcat-scroll-slider::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.subcat-scroll-slider::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  margin: 2px;
+}
+
+.subcat-scroll-slider::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.55);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.subcat-scroll-slider::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.9);
+}
+
+/* Light Theme Scroll Slider */
+html.light .subcat-scroll-slider {
+  scrollbar-width: thin;
+  scrollbar-color: #a855f7 #e2e8f0;
+}
+
+html.light .subcat-scroll-slider::-webkit-scrollbar-track {
+  background: #e2e8f0 !important;
+  border-radius: 999px;
+  margin: 2px;
+}
+
+html.light .subcat-scroll-slider::-webkit-scrollbar-thumb {
+  background: #a855f7 !important;
+  border-radius: 999px;
+  border: 1px solid #ffffff;
+}
+
+html.light .subcat-scroll-slider::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed !important;
+}
+
+/* Mode Switcher & Unified Bar Light & Dark Theme */
+.mode-toggle-container {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.mode-btn-inactive {
+  color: #a1a1aa;
+}
+
+.mode-btn-inactive:hover {
+  color: #ffffff;
+}
+
+html.light .mode-toggle-container {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light .mode-btn-inactive {
+  color: #475569 !important;
+}
+
+html.light .mode-btn-inactive:hover {
+  color: #0f172a !important;
+  background-color: #e2e8f0 !important;
+}
+
+html.light .quick-sample-btn {
+  background-color: #faf5ff !important;
+  border-color: #e9d5ff !important;
+  color: #6b21a8 !important;
+}
+
+html.light .quick-sample-btn:hover {
+  background-color: #f3e8ff !important;
+  color: #581c87 !important;
+}
+
+html.light .quick-sample-btn-muted {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+html.light .quick-sample-btn-muted:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
 /* Custom Roshan Sah color (#e47200) exclusively in Light Theme */
 html.light .roshan-name,
 html.light .roshan-name * {
