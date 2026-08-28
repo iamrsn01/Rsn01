@@ -375,6 +375,11 @@ html.light select:focus {
   box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15) !important;
 }
 
+html.light select option {
+  background-color: #ffffff !important;
+  color: #09090b !important;
+}
+
 /* Code block & pre tags in Tools */
 html.light pre,
 html.light code {

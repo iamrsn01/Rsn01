@@ -6,6 +6,7 @@ export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const handleCopyEmail = () => {
@@ -14,7 +15,7 @@ export default function Contact() {
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
       alert('Please fill out all fields.');
@@ -22,13 +23,42 @@ export default function Contact() {
     }
 
     setIsSubmitting(true);
-    // Simulate real high-end API dispatch
-    setTimeout(() => {
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/iamrsn01@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          _replyto: formData.email,
+          _subject: `New Message from Homepage Reach Out: ${formData.name}`,
+          message: formData.message,
+          _template: 'table',
+          _captcha: 'false'
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success === 'true' || data.success === true || (data.message && data.message.toLowerCase().includes('activation')) || response.ok) {
+        setShowSuccessToast(true);
+        setFormData({ name: '', email: '', message: '' });
+        setTimeout(() => setShowSuccessToast(false), 6000);
+      } else {
+        throw new Error(data.message || 'Submission failed.');
+      }
+    } catch (err: any) {
+      console.error('Contact submission error:', err);
+      // Fallback
+      window.location.href = `mailto:iamrsn01@gmail.com?subject=${encodeURIComponent('Inquiry from ' + formData.name)}&body=${encodeURIComponent(formData.message)}`;
+    } finally {
       setIsSubmitting(false);
-      setShowSuccessToast(true);
-      setFormData({ name: '', email: '', message: '' });
-      setTimeout(() => setShowSuccessToast(false), 5000);
-    }, 1500);
+    }
   };
 
   return (
