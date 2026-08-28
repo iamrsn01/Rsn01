@@ -14,6 +14,7 @@ import {
   Twitter, 
   Sparkles, 
   MessageSquare,
+  MessageCircle,
   HelpCircle,
   ChevronDown,
   ArrowUpRight
@@ -364,6 +365,37 @@ export default function LetsTalkPage() {
                 >
                   {copiedEmail ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                 </button>
+              </div>
+
+              {/* WhatsApp Direct Chat Card */}
+              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between group hover:border-emerald-500/30 transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)]">
+                    <MessageCircle className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="block text-[9px] font-mono tracking-widest text-zinc-500 uppercase">WHATSAPP DIRECT</span>
+                    <a 
+                      href="https://wa.me/9779801104032" 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="block text-white hover:text-emerald-400 font-medium text-sm transition-colors mt-0.5"
+                    >
+                      +977 9801104032
+                    </a>
+                  </div>
+                </div>
+
+                <a
+                  href="https://wa.me/9779801104032"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Chat directly on WhatsApp"
+                  className="px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+                >
+                  <span>Chat</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
               </div>
 
               {/* Location Card */}

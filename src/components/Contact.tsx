@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, MapPin, Facebook, Twitter, Github, Send, CheckCircle2, Copy, Check } from 'lucide-react';
+import { Mail, MapPin, Facebook, Twitter, Github, Send, CheckCircle2, Copy, Check, MessageCircle, ArrowUpRight } from 'lucide-react';
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -141,6 +141,43 @@ export default function Contact() {
                 >
                   {copiedEmail ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                 </button>
+              </motion.div>
+
+              {/* WhatsApp Direct Chat Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.05 }}
+                className="glow-card glass p-5 rounded-2xl border border-white/5 flex items-center justify-between group hover:border-emerald-500/30 transition-all duration-300"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-emerald-400 group-hover:bg-emerald-500/10 transition-all duration-300 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
+                    <MessageCircle className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="block text-[9px] font-mono tracking-widest text-zinc-500 uppercase">WHATSAPP DIRECT</span>
+                    <a 
+                      href="https://wa.me/9779801104032" 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="block text-white hover:text-emerald-400 font-medium text-sm sm:text-base transition-colors mt-0.5"
+                    >
+                      +977 9801104032
+                    </a>
+                  </div>
+                </div>
+
+                <a
+                  href="https://wa.me/9779801104032"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors clickable flex items-center gap-1 text-xs font-semibold"
+                  title="Chat on WhatsApp"
+                >
+                  <span>Chat</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
               </motion.div>
 
               {/* Location Card */}
