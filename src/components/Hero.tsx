@@ -32,7 +32,11 @@ function QuickCard({ icon, label, value, delay }: QuickCardProps) {
   );
 }
 
-export default function Hero() {
+interface HeroProps {
+  onNavigateToLetsTalk?: () => void;
+}
+
+export default function Hero({ onNavigateToLetsTalk }: HeroProps = {}) {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [showDownloadToast, setShowDownloadToast] = useState(false);
   const [typedName, setTypedName] = useState('');
@@ -168,9 +172,13 @@ export default function Hero() {
 
   const handleContactClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const contactSection = document.getElementById('contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
+    if (onNavigateToLetsTalk) {
+      onNavigateToLetsTalk();
+    } else {
+      const contactSection = document.getElementById('contact');
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 

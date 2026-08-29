@@ -1,6 +1,13 @@
 import { useState, useMemo, useEffect, MouseEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import tilichoPhoto from '../assets/images/tilicho-lake.jpg';
+import chhusangPhoto from '../assets/images/chhusang-mustang.jpg';
+import koralaBorderPhoto from '../assets/images/korala-border-wheelie.jpg';
+import loManthangPhoto from '../assets/images/lo-manthang-palace.jpg';
+import lataStairsPhoto from '../assets/images/latarameshwar-stairs.jpg';
+import lataTrailPhoto from '../assets/images/latarameshwar-trail.jpg';
+import lataRidgePhoto from '../assets/images/latarameshwar-ridge.jpg';
+import lataForestPhoto from '../assets/images/latarameshwar-forest.jpg';
 import {
   Heart,
   ArrowUpRight,
@@ -23,10 +30,21 @@ import {
   Users,
   Share2,
   Check,
-  ZoomIn
+  ZoomIn,
+  Image as ImageIcon
 } from 'lucide-react';
 
 export type PlaceCategory = 'all' | 'lakes-treks' | 'mustang' | 'waterfalls-rivers' | 'heritage-hills' | 'friends-life';
+
+const getPhotoLabel = (imgUrl: string, idx: number) => {
+  if (imgUrl.includes('stairs')) return '🪜 Foggy Ridge Stairs & Railing';
+  if (imgUrl.includes('ridge')) return '☁️ Open Arms on Misty Ridge';
+  if (imgUrl.includes('trail')) return '🌿 Rest on Forest Trail';
+  if (imgUrl.includes('forest')) return '🌲 Misty Forest Trees Portrait';
+  if (imgUrl.includes('korala')) return '🏍️ Korala Border (4,660m) Wheelie';
+  if (imgUrl.includes('palace') || imgUrl.includes('manthang')) return '🏛️ Lo Manthang Palace Courtyard';
+  return `📷 Shot ${idx + 1}`;
+};
 
 export interface ExploredPlace {
   id: string;
@@ -39,12 +57,37 @@ export interface ExploredPlace {
   bestSeason: string;
   type: string;
   imageUrl: string;
+  galleryImages?: string[];
   summary: string;
   highlights: string[];
   travelStory: string[];
 }
 
 const exploredPlaces: ExploredPlace[] = [
+  {
+    id: 'chhusang-mustang',
+    name: 'Chhusang & Upper Mustang Expedition',
+    location: 'Chhusang Ward No. 3, Mustang',
+    region: 'Forbidden Kingdom of Lo Gateway',
+    altitude: '2,980 m (9,776 ft)',
+    category: 'mustang',
+    categoryLabel: 'Mustang Motorcycle Odyssey',
+    bestSeason: 'Spring & Autumn (Mar - Nov)',
+    type: 'Trans-Himalayan Motorcycle Journey',
+    imageUrl: chhusangPhoto,
+    summary: 'Riding a motorcycle through the raw, wind-sculpted canyons of Upper Mustang, stopping at the iconic Welcome to Chhusang landmark along the vast Kali Gandaki riverbed.',
+    highlights: [
+      'Solo motorcycle expedition on a Suzuki Gixxer tackling rugged Himalayan riverbeds and high desert roads.',
+      'Stopping before the iconic carved stone pillar of Welcome to Chhusang Ward No. 3 with towering ochre cliffs.',
+      'Transitioning into the historic Forbidden Kingdom of Lo, surrounded by sky caves and barren mountain majesty.',
+      'Conquering relentless afternoon winds and loose river gravel under piercing blue Trans-Himalayan skies.'
+    ],
+    travelStory: [
+      'Riding a motorcycle through the Trans-Himalayan desert of Mustang is one of the rawest, most exhilarating, and soul-stirring adventures of my life. Leaving the lush green valleys of lower Nepal behind, the landscape dramatically transforms into an arid, otherworldly kingdom of red sandstone cliffs, deep river gorges, and ancient rock formations.',
+      'Arriving at the iconic carved pillar of "Welcome to Chhusang Ward No. 3" along the wide, stone-strewn Kali Gandaki riverbed with my Suzuki Gixxer was a monumental milestone. Sitting beside the landmark in full riding gear, overlooking the expansive river flats under crystal-clear blue skies, was a moment of pure freedom and deep connection with nature.',
+      'Chhusang serves as the mystical gateway into Upper Mustang and the ancient Kingdom of Lo. Navigating rough trails, crossing mountain streams, and feeling the powerful Himalayan winds against the visor tested every bit of endurance — but the rewards of untouched culture, surreal landscapes, and personal accomplishment were unforgettable.'
+    ]
+  },
   {
     id: 'rara-lake',
     name: 'Rara Lake',
@@ -256,24 +299,26 @@ const exploredPlaces: ExploredPlace[] = [
   {
     id: 'upper-mustang-korala',
     name: 'Upper Mustang & Korala Border',
-    location: 'Lo Manthang to China Border',
+    location: 'Lo Manthang to China Border (4,660m)',
     region: 'Forbidden Kingdom of Lo',
     altitude: '4,660 m (15,288 ft)',
     category: 'mustang',
     categoryLabel: 'The Forbidden Kingdom',
     bestSeason: 'Apr - Nov',
-    type: 'High-Altitude Remote Expedition',
-    imageUrl: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=1200&q=80',
-    summary: 'The ancient walled kingdom of Lo Manthang, medieval sky caves, ochre canyon cliffs, reaching the northern Korala border outpost with Tibet/China.',
+    type: 'High-Altitude Motorcycle Expedition',
+    imageUrl: koralaBorderPhoto,
+    galleryImages: [koralaBorderPhoto, loManthangPhoto],
+    summary: 'Traversing the ancient walled kingdom of Lo Manthang palace fortress and reaching the high-altitude Korala Border (4,660m) on the Nepal-China frontier with the Suzuki Gixxer.',
     highlights: [
-      'Exploring the preserved royal palace, monasteries, and ancient walled city of Lo Manthang.',
-      'Standing at the Korala Border (Pillar 24) at 4,660m on the vast Tibetan plateau.',
-      'Discovering the mystical sky caves of Chhoser carved into colossal red sandstone cliffs.'
+      'Popping a motorcycle wheelie on the Suzuki Gixxer at the high-altitude plateau of the Korala Border (China-Nepal border post at 4,660m).',
+      'Standing in the historic cobbled courtyard of the ancient King’s Palace and whitewashed fortifications of Lo Manthang.',
+      'Traversing rugged Trans-Himalayan desert passes, sky caves of Chhoser, and barren red-rock canyons.',
+      'Experiencing centuries of preserved Tibetan-Buddhist heritage, fluttering prayer flags, and medieval monasteries.'
     ],
     travelStory: [
-      'Upper Mustang feels like journeying back in time hundreds of years. The desert canyons, painted chortens, and whitewashed mud-brick villages preserve centuries of Tibetan-Buddhist culture.',
-      'Reaching Lo Manthang after days of traversing high windblown passes was surreal. Walking within the ancient kingdom’s walls felt like living inside a history book.',
-      'Continuing all the way up to the historic Korala border at 4,660m, overlooking the vast open Tibetan plateau under deep navy skies, was one of the grandest milestones of my travels.'
+      'Upper Mustang feels like journeying back into an ancient era. The desert canyons, painted chortens, and whitewashed mud-brick fortifications preserve centuries of pure Tibetan-Buddhist heritage.',
+      'Arriving at the historic walled city of Lo Manthang after days of traversing high windblown mountain passes was breathtaking. Standing in the historic palace courtyard beneath towering stone walls and fluttering prayer flags under piercing blue skies felt like stepping inside living history.',
+      'Pushing further north to the high-altitude Korala Border at 4,660m along the open frontier with China was an unforgettable climax. Celebrating the milestone with a wheelie on my Suzuki Gixxer across the vast Himalayan plateau under the infinite blue sky is a memory etched for a lifetime.'
     ]
   },
   {
@@ -302,24 +347,31 @@ const exploredPlaces: ExploredPlace[] = [
   {
     id: 'latarameshwar-mahadev',
     name: 'Latarameshwar Mahadev (Lateshwor)',
-    location: 'Makwanpur / Sindhuli',
+    location: 'Makwanpur / Kulekhani Ridge',
     region: 'Bagmati Province',
     altitude: '2,200 m (7,217 ft)',
     category: 'heritage-hills',
-    categoryLabel: 'Spiritual Mountain Shrine',
-    bestSeason: 'Autumn & Spring',
-    type: 'Hilltop Forest Pilgrimage',
-    imageUrl: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1200&q=80',
-    summary: 'A peaceful hilltop shrine dedicated to Lord Shiva, accessible via a refreshing uphill forest hike with 360-degree ridge panoramas.',
+    categoryLabel: 'Spiritual Mountain Ridge',
+    bestSeason: 'Autumn, Winter & Spring',
+    type: 'Misty Ridge & Forest Pilgrimage Hike',
+    imageUrl: lataStairsPhoto,
+    galleryImages: [
+      lataStairsPhoto,
+      lataRidgePhoto,
+      lataTrailPhoto,
+      lataForestPhoto
+    ],
+    summary: 'A breathtaking misty ridge hike to the sacred Lord Shiva hilltop shrine, featuring steep cliffside stairs with orange railings, sea of clouds, and mossy mountain trails.',
     highlights: [
-      'Tranquil forest trail surrounded by oak and rhododendron trees.',
-      'Serene spiritual atmosphere and panoramic views of rolling hills and distant snowlines.',
-      'Quiet meditative sanctuary away from urban hustle.'
+      'Ascending the steep cliffside stone staircase with bright orange safety railings and colorful Buddhist prayer flags draped along the foggy ridge.',
+      'Standing atop the summit rocky outcrop with open arms amidst a vast blanket of rolling mountain clouds.',
+      'Trekking through lush green subtropical forest trails lined with wild flowers, moss-covered boulders, and morning dew.',
+      'Reaching the peaceful hilltop shrine of Lord Shiva at 2,200m enveloped in cool mountain mist.'
     ],
     travelStory: [
-      'The trek up to Latarameshwar Mahadev offers the perfect weekend escape into nature and spirituality. The path ascends through peaceful pine and subtropical forest trails.',
-      'Upon reaching the hilltop shrine, the cool mountain breeze and continuous ringing of brass temple bells bring an immediate sense of inner peace.',
-      'Looking out from the ridge over the green valleys below with friends was both grounding and spiritually rejuvenating.'
+      'The hike up to Latarameshwar Mahadev is an unforgettable climb straight into the clouds. Ascending through the tranquil forest of Makwanpur, the path winds through ancient moss-draped trees, wild greenery, and rocky outcrops.',
+      'As you near the upper ridge, the trail becomes dramatic and breathtaking — a narrow stone staircase with bright orange railings and colorful prayer flags cutting directly across the knife-edge ridge enveloped in dense, ethereal fog.',
+      'Reaching the rocky summit pinnacle at 2,200m and spreading open arms against the endless sea of white mist brings an overwhelming feeling of freedom, serenity, and spiritual renewal.'
     ]
   },
   {
@@ -447,6 +499,8 @@ interface LifePageProps {
 export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageProps) {
   const [selectedPlace, setSelectedPlace] = useState<ExploredPlace | null>(null);
   const [previewPlace, setPreviewPlace] = useState<ExploredPlace | null>(null);
+  const [activeModalImage, setActiveModalImage] = useState<string | null>(null);
+  const [activePreviewImage, setActivePreviewImage] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<PlaceCategory>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -457,6 +511,7 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
       if (e.key === 'Escape') {
         if (previewPlace) {
           setPreviewPlace(null);
+          setActivePreviewImage(null);
         } else if (selectedPlace) {
           handleClosePlace();
         }
@@ -471,22 +526,30 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
     if (initialStoryId) {
       const match = exploredPlaces.find(
         p => p.id.toLowerCase() === initialStoryId.toLowerCase() ||
-             p.id.toLowerCase().includes(initialStoryId.toLowerCase())
+          p.id.toLowerCase().includes(initialStoryId.toLowerCase())
       );
       if (match) {
         setSelectedPlace(match);
+        setActiveModalImage(match.imageUrl);
       }
     }
   }, [initialStoryId]);
 
   const handleOpenPlace = (place: ExploredPlace) => {
     setSelectedPlace(place);
+    setActiveModalImage(place.imageUrl);
     window.location.hash = `#/blog/life/${place.id}`;
   };
 
   const handleClosePlace = () => {
     setSelectedPlace(null);
+    setActiveModalImage(null);
     window.location.hash = '#/blog/life';
+  };
+
+  const handleOpenPreview = (place: ExploredPlace, imgUrl?: string) => {
+    setPreviewPlace(place);
+    setActivePreviewImage(imgUrl || activeModalImage || place.imageUrl);
   };
 
   const handleCopyShareLink = (place: ExploredPlace, e?: MouseEvent) => {
@@ -524,62 +587,117 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
     <section className="min-h-screen px-4 py-28 sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-10">
 
-        {/* Page Hero Banner */}
+        {/* Cinematic Split Hero Banner: Top Half Photo Cover, Bottom Half Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="rounded-[2.5rem] border border-white/10 bg-white/[0.03] p-8 sm:p-12 shadow-2xl shadow-black/20 relative overflow-hidden"
+          className="rounded-[2.5rem] border border-white/10 bg-[#070707] shadow-2xl shadow-black/60 relative overflow-hidden group"
         >
-          <div className="absolute right-[-5%] top-[-10%] w-96 h-96 bg-emerald-600/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute left-[20%] bottom-[-20%] w-80 h-80 bg-teal-600/10 rounded-full blur-3xl pointer-events-none" />
+          {/* TOP HALF: Full-Width Cinematic Cover Photo Showcase */}
+          <div
+            onClick={() => setPreviewPlace(exploredPlaces.find(p => p.id === 'chhusang-mustang') || exploredPlaces[0])}
+            title="Click to view full-screen cover photo"
+            className="relative w-full h-72 sm:h-96 lg:h-[440px] overflow-hidden bg-zinc-900 cursor-zoom-in group/cover"
+          >
+            <img
+              src={chhusangPhoto}
+              alt="Mustang Motorcycle Expedition - Welcome to Chhusang Ward No. 3"
+              className="w-full h-full object-cover object-[center_35%] filter brightness-[0.92] group-hover/cover:brightness-100 transition-transform duration-1000 group-hover/cover:scale-[1.03]"
+            />
 
-          <div className="relative z-10">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-2.5 text-emerald-400 font-mono text-xs uppercase tracking-[0.25em]">
-                <div className="p-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30">
-                  <Compass className="h-4 w-4" />
-                </div>
+            {/* Subtle Gradient Overlays */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-black/25 to-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/30" />
+
+            {/* Top Bar Navigation inside Photo Header */}
+            <div
+              className="absolute top-4 sm:top-6 left-4 sm:left-8 right-4 sm:right-8 flex items-center justify-between flex-wrap gap-3 z-10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-2 text-amber-400 font-mono text-xs uppercase tracking-[0.25em] px-3.5 py-1.5 rounded-full bg-black/65 border border-amber-500/30 backdrop-blur-md shadow-lg">
+                <Compass className="h-3.5 w-3.5 text-amber-400" />
                 <span>Life & Exploration Travelogue</span>
               </div>
 
-              {onNavigateToWork && (
+              <div className="flex items-center gap-2.5">
+                {/* 1-Click Button to Expand Background Cover Photo */}
                 <button
-                  onClick={onNavigateToWork}
-                  className="flex items-center gap-2 text-xs font-medium text-zinc-400 hover:text-purple-400 px-3.5 py-1.5 rounded-full bg-white/[0.03] hover:bg-purple-500/10 border border-white/5 hover:border-purple-500/30 transition-all duration-300 cursor-pointer"
+                  type="button"
+                  onClick={() => setPreviewPlace(exploredPlaces.find(p => p.id === 'chhusang-mustang') || exploredPlaces[0])}
+                  title="Click to view full cover photo in full screen"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-black/65 hover:bg-amber-500 hover:text-black text-amber-300 border border-amber-500/30 backdrop-blur-md text-xs font-mono transition-all duration-300 cursor-pointer shadow-lg"
                 >
-                  <Briefcase className="w-3.5 h-3.5 text-purple-400" />
-                  <span>Switch to Work Page</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
+                  <ZoomIn className="w-3.5 h-3.5" />
+                  <span>Preview Cover</span>
                 </button>
-              )}
+
+                {onNavigateToWork && (
+                  <button
+                    onClick={onNavigateToWork}
+                    className="flex items-center gap-1.5 text-xs font-medium text-zinc-300 hover:text-purple-300 px-3.5 py-1.5 rounded-full bg-black/65 hover:bg-purple-500/20 border border-white/15 hover:border-purple-500/40 backdrop-blur-md transition-all duration-300 cursor-pointer shadow-lg"
+                  >
+                    <Briefcase className="w-3.5 h-3.5 text-purple-400" />
+                    <span>Switch to Work</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
 
-            <h1 className="mt-5 font-display text-3xl sm:text-5xl font-bold text-white tracking-tight leading-tight">
-              Journeys, High Passes & <span className="text-emerald-400">Hidden Trails</span>.
-            </h1>
+            {/* Bottom Overlay Badge on Photo */}
+            <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-8 right-4 sm:right-8 flex items-end justify-between flex-wrap gap-4 z-10 pointer-events-none">
+              <div className="space-y-1.5">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/75 border border-amber-500/30 backdrop-blur-md text-amber-300 text-xs font-mono">
+                  <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Chhusang (Ward No. 3), Upper Mustang • 2,980m</span>
+                </div>
+                <p className="text-xs sm:text-sm font-mono text-zinc-200 drop-shadow-md">
+                  🏍️ Trans-Himalayan Solo Expedition
+                </p>
+              </div>
 
-            <p className="mt-4 max-w-3xl text-sm sm:text-base leading-relaxed text-zinc-400 font-light">
-              A personal visual travelogue of memorable places and lifelong milestones I have explored across Nepal — from the high glacial peaks of Tilicho (4,919m) and pristine waters of Rara, to the ancient walled kingdom of Upper Mustang and the enduring bonds of friendship.
-            </p>
+              <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/75 border border-white/15 backdrop-blur-md text-[11px] font-mono text-zinc-300">
+                <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+                <span>Click image to expand full-screen</span>
+              </div>
+            </div>
+          </div>
+
+          {/* BOTTOM HALF: Narrative, Stats Ribbon, Search & Category Filter Controls */}
+          <div className="p-6 sm:p-10 lg:p-12 space-y-8 bg-[#070707]">
+
+            {/* Main Cover Typography & Narrative */}
+            <div className="space-y-4 max-w-4xl">
+              <h1 className="font-display text-3xl sm:text-5xl font-bold text-white tracking-tight leading-tight">
+                Journeys, High Passes &{' '}
+                <span className="bg-gradient-to-r from-amber-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                  Hidden Trails
+                </span>.
+              </h1>
+
+              <p className="text-sm sm:text-base leading-relaxed text-zinc-300 font-light">
+                A personal visual travelogue of memorable milestones and places explored across Nepal — from solo motorcycle odysseys through the arid desert canyons of Upper Mustang and glacial summit heights at Tilicho (4,919m), to tranquil lakes and the enduring bonds of friendship.
+              </p>
+            </div>
 
             {/* Travel Stats Quick Ribbon */}
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-white/5">
-              <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5">
-                <span className="block text-2xl font-bold text-white font-display">17</span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                <span className="block text-2xl font-bold text-white font-display">18</span>
                 <span className="text-[11px] font-mono text-emerald-300">Life Stories & Places</span>
               </div>
-              <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5">
+              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
                 <span className="block text-2xl font-bold text-white font-display">4,919 m</span>
                 <span className="text-[11px] font-mono text-sky-300">Highest (Tilicho)</span>
               </div>
-              <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5">
+              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                <span className="block text-2xl font-bold text-white font-display">Chhusang</span>
+                <span className="text-[11px] font-mono text-amber-300">Mustang Gateway</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
                 <span className="block text-2xl font-bold text-white font-display">10+ Yrs</span>
                 <span className="text-[11px] font-mono text-teal-300">Friendship Bond</span>
-              </div>
-              <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5">
-                <span className="block text-2xl font-bold text-white font-display">Korala 🇨🇳</span>
-                <span className="text-[11px] font-mono text-amber-300">Border Reached</span>
               </div>
             </div>
 
@@ -601,8 +719,8 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 <button
                   onClick={() => setActiveCategory('all')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 cursor-pointer ${activeCategory === 'all'
-                      ? 'bg-emerald-600 text-white font-medium shadow-md shadow-emerald-900/30'
-                      : 'bg-white/[0.03] text-zinc-400 hover:text-white hover:bg-white/10 border border-white/5'
+                    ? 'bg-emerald-600 text-white font-medium shadow-md shadow-emerald-900/30'
+                    : 'bg-white/[0.03] text-zinc-400 hover:text-white hover:bg-white/10 border border-white/5'
                     }`}
                 >
                   All ({counts.all})
@@ -611,8 +729,8 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 <button
                   onClick={() => setActiveCategory('lakes-treks')}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 cursor-pointer ${activeCategory === 'lakes-treks'
-                      ? 'bg-sky-600 text-white font-medium shadow-md shadow-sky-900/30'
-                      : 'bg-white/[0.03] text-zinc-400 hover:text-sky-300 hover:bg-white/10 border border-white/5'
+                    ? 'bg-sky-600 text-white font-medium shadow-md shadow-sky-900/30'
+                    : 'bg-white/[0.03] text-zinc-400 hover:text-sky-300 hover:bg-white/10 border border-white/5'
                     }`}
                 >
                   <Mountain className="w-3.5 h-3.5 text-sky-400" />
@@ -622,8 +740,8 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 <button
                   onClick={() => setActiveCategory('mustang')}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 cursor-pointer ${activeCategory === 'mustang'
-                      ? 'bg-amber-600 text-white font-medium shadow-md shadow-amber-900/30'
-                      : 'bg-white/[0.03] text-zinc-400 hover:text-amber-300 hover:bg-white/10 border border-white/5'
+                    ? 'bg-amber-600 text-white font-medium shadow-md shadow-amber-900/30'
+                    : 'bg-white/[0.03] text-zinc-400 hover:text-amber-300 hover:bg-white/10 border border-white/5'
                     }`}
                 >
                   <Compass className="w-3.5 h-3.5 text-amber-400" />
@@ -633,8 +751,8 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 <button
                   onClick={() => setActiveCategory('waterfalls-rivers')}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 cursor-pointer ${activeCategory === 'waterfalls-rivers'
-                      ? 'bg-cyan-600 text-white font-medium shadow-md shadow-cyan-900/30'
-                      : 'bg-white/[0.03] text-zinc-400 hover:text-cyan-300 hover:bg-white/10 border border-white/5'
+                    ? 'bg-cyan-600 text-white font-medium shadow-md shadow-cyan-900/30'
+                    : 'bg-white/[0.03] text-zinc-400 hover:text-cyan-300 hover:bg-white/10 border border-white/5'
                     }`}
                 >
                   <Waves className="w-3.5 h-3.5 text-cyan-400" />
@@ -644,8 +762,8 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 <button
                   onClick={() => setActiveCategory('heritage-hills')}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 cursor-pointer ${activeCategory === 'heritage-hills'
-                      ? 'bg-emerald-600 text-white font-medium shadow-md shadow-emerald-900/30'
-                      : 'bg-white/[0.03] text-zinc-400 hover:text-emerald-300 hover:bg-white/10 border border-white/5'
+                    ? 'bg-emerald-600 text-white font-medium shadow-md shadow-emerald-900/30'
+                    : 'bg-white/[0.03] text-zinc-400 hover:text-emerald-300 hover:bg-white/10 border border-white/5'
                     }`}
                 >
                   <TreePine className="w-3.5 h-3.5 text-emerald-400" />
@@ -655,8 +773,8 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 <button
                   onClick={() => setActiveCategory('friends-life')}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 cursor-pointer ${activeCategory === 'friends-life'
-                      ? 'bg-teal-600 text-white font-medium shadow-md shadow-teal-900/30'
-                      : 'bg-white/[0.03] text-zinc-400 hover:text-teal-300 hover:bg-white/10 border border-white/5'
+                    ? 'bg-teal-600 text-white font-medium shadow-md shadow-teal-900/30'
+                    : 'bg-white/[0.03] text-zinc-400 hover:text-teal-300 hover:bg-white/10 border border-white/5'
                     }`}
                 >
                   <Users className="w-3.5 h-3.5 text-teal-400" />
@@ -664,6 +782,7 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 </button>
               </div>
             </div>
+
           </div>
         </motion.div>
 
@@ -682,8 +801,8 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 className="group rounded-3xl border border-white/10 bg-[#070707] flex flex-col justify-between hover:border-emerald-500/30 transition-all duration-300 hover:-translate-y-1.5 shadow-xl shadow-black/20 overflow-hidden relative"
               >
                 {/* Photo Thumbnail Container - Clickable to Preview */}
-                <div 
-                  onClick={() => setPreviewPlace(place)}
+                <div
+                  onClick={() => handleOpenPreview(place)}
                   title="Click to preview full-screen image"
                   className="relative h-48 w-full overflow-hidden bg-zinc-900 cursor-zoom-in group/img"
                 >
@@ -709,6 +828,16 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                       {place.categoryLabel}
                     </span>
                   </div>
+
+                  {/* Multi-Photo Indicator Badge */}
+                  {place.galleryImages && place.galleryImages.length > 1 && (
+                    <div className="absolute bottom-3 left-3 pointer-events-none">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium backdrop-blur-md bg-black/75 text-amber-300 border border-amber-500/30 flex items-center gap-1 shadow-lg">
+                        <ImageIcon className="w-3 h-3 text-amber-400" />
+                        <span>{place.galleryImages.length} Photos</span>
+                      </span>
+                    </div>
+                  )}
 
                   {/* 1-Click Copy Direct Link Button */}
                   <div className="absolute top-3 right-3 flex items-center gap-1.5">
@@ -785,7 +914,7 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
           </AnimatePresence>
         </div>
 
-        {/* Modal Travelogue Detail Reader */}
+        {/* Individual Story Modal View */}
         <AnimatePresence>
           {selectedPlace && (
             <motion.div
@@ -804,15 +933,15 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto glass rounded-3xl border border-white/10 shadow-2xl space-y-6"
               >
                 {/* Header Banner Image - Clickable for Fullscreen View */}
-                <div 
-                  onClick={() => setPreviewPlace(selectedPlace)}
+                <div
+                  onClick={() => handleOpenPreview(selectedPlace, activeModalImage || selectedPlace.imageUrl)}
                   title="Click to expand full-screen photo"
-                  className="relative h-64 sm:h-72 w-full overflow-hidden rounded-t-3xl bg-zinc-900 cursor-zoom-in group/modalimg"
+                  className="relative h-64 sm:h-80 w-full overflow-hidden rounded-t-3xl bg-zinc-900 cursor-zoom-in group/modalimg"
                 >
                   <img
-                    src={selectedPlace.imageUrl}
+                    src={activeModalImage || selectedPlace.imageUrl}
                     alt={selectedPlace.name}
-                    className="w-full h-full object-cover filter brightness-[0.85] transition-transform duration-700 group-hover/modalimg:scale-105"
+                    className="w-full h-full object-cover filter brightness-[0.88] transition-transform duration-700 group-hover/modalimg:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-transparent to-black/40" />
 
@@ -877,6 +1006,55 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                 </div>
 
                 <div className="p-6 sm:p-8 space-y-6 pt-0">
+                  {/* Expedition Multi-Photo Gallery Ribbon if multiple images available */}
+                  {selectedPlace.galleryImages && selectedPlace.galleryImages.length > 1 && (
+                    <div className="space-y-3 bg-white/[0.02] border border-white/10 rounded-2xl p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono uppercase tracking-widest text-amber-300 font-semibold flex items-center gap-1.5">
+                          <ImageIcon className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Expedition Gallery ({selectedPlace.galleryImages.length} Photos)</span>
+                        </span>
+                        <span className="text-[11px] font-mono text-zinc-400">Click photo to switch & preview</span>
+                      </div>
+
+                      <div className={`grid gap-3 ${selectedPlace.galleryImages.length > 2 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-2'}`}>
+                        {selectedPlace.galleryImages.map((imgUrl, idx) => {
+                          const isActive = (activeModalImage || selectedPlace.imageUrl) === imgUrl;
+                          const label = getPhotoLabel(imgUrl, idx);
+                          return (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => setActiveModalImage(imgUrl)}
+                              className={`group/thumb relative rounded-2xl overflow-hidden border transition-all duration-300 text-left cursor-pointer ${
+                                isActive
+                                  ? 'border-amber-500 ring-2 ring-amber-500/40 shadow-lg shadow-amber-900/30'
+                                  : 'border-white/10 hover:border-white/30 opacity-75 hover:opacity-100'
+                              }`}
+                            >
+                              <div className="h-28 w-full overflow-hidden bg-zinc-900">
+                                <img
+                                  src={imgUrl}
+                                  alt={label}
+                                  className="w-full h-full object-cover transition-transform duration-500 group-hover/thumb:scale-105"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                              </div>
+                              <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-[11px] font-mono text-white">
+                                <span className="truncate font-medium text-xs">{label}</span>
+                                {isActive && (
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500 text-black font-bold shrink-0 ml-1">
+                                    Active
+                                  </span>
+                                )}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Key Highlights */}
                   <div className="bg-emerald-950/20 border border-emerald-500/20 rounded-2xl p-5 space-y-2.5">
                     <span className="text-xs font-mono uppercase tracking-widest text-emerald-300 font-semibold block">
@@ -912,7 +1090,7 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
 
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => setPreviewPlace(selectedPlace)}
+                        onClick={() => handleOpenPreview(selectedPlace, activeModalImage || selectedPlace.imageUrl)}
                         className="px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/10 text-white text-xs font-semibold transition-all border border-white/10 cursor-pointer flex items-center gap-1.5"
                       >
                         <ZoomIn className="w-3.5 h-3.5 text-emerald-400" />
@@ -959,10 +1137,13 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 z-[100] flex flex-col items-center justify-between p-4 sm:p-8 bg-black/95 backdrop-blur-2xl"
-              onClick={() => setPreviewPlace(null)}
+              onClick={() => {
+                setPreviewPlace(null);
+                setActivePreviewImage(null);
+              }}
             >
               {/* Top Bar Controls */}
-              <div 
+              <div
                 className="w-full max-w-6xl flex items-center justify-between z-10"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -998,7 +1179,10 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
                   </button>
 
                   <button
-                    onClick={() => setPreviewPlace(null)}
+                    onClick={() => {
+                      setPreviewPlace(null);
+                      setActivePreviewImage(null);
+                    }}
                     className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors border border-white/20 backdrop-blur-md cursor-pointer shadow-lg"
                     aria-label="Close Preview"
                   >
@@ -1008,36 +1192,64 @@ export default function LifePage({ initialStoryId, onNavigateToWork }: LifePageP
               </div>
 
               {/* Center High-Resolution Image */}
-              <div 
-                className="relative my-auto max-h-[75vh] max-w-5xl flex items-center justify-center overflow-hidden rounded-2xl border border-white/15 shadow-2xl shadow-black/90"
+              <div
+                className="relative my-auto max-h-[70vh] max-w-5xl flex items-center justify-center overflow-hidden rounded-2xl border border-white/15 shadow-2xl shadow-black/90"
                 onClick={(e) => e.stopPropagation()}
               >
                 <motion.img
+                  key={activePreviewImage || previewPlace.imageUrl}
                   initial={{ scale: 0.92, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.92, opacity: 0 }}
                   transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  src={previewPlace.imageUrl}
+                  src={activePreviewImage || previewPlace.imageUrl}
                   alt={previewPlace.name}
-                  className="max-h-[75vh] w-auto max-w-full object-contain rounded-2xl select-none"
+                  className="max-h-[70vh] w-auto max-w-full object-contain rounded-2xl select-none"
                 />
               </div>
 
-              {/* Bottom Caption Bar */}
-              <div 
-                className="w-full max-w-4xl text-center z-10 pb-2 space-y-1.5"
+              {/* Bottom Gallery Switcher & Caption Bar */}
+              <div
+                className="w-full max-w-4xl text-center z-10 pb-2 space-y-3"
                 onClick={(e) => e.stopPropagation()}
               >
-                <h3 className="font-display text-xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-lg">
-                  {previewPlace.name}
-                </h3>
-                <p className="text-xs sm:text-sm font-mono text-emerald-400 flex items-center justify-center gap-1.5">
-                  <MapPin className="w-4 h-4" />
-                  {previewPlace.location}, {previewPlace.region} • {previewPlace.type}
-                </p>
-                <p className="text-[11px] font-mono text-zinc-500 pt-1">
-                  Press ESC or click anywhere outside image to close
-                </p>
+                {/* Multi-Photo Switcher Pills if Place has Gallery Images */}
+                {previewPlace.galleryImages && previewPlace.galleryImages.length > 1 && (
+                  <div className="flex items-center justify-center gap-2 flex-wrap">
+                    {previewPlace.galleryImages.map((imgUrl, idx) => {
+                      const isCurrent = (activePreviewImage || previewPlace.imageUrl) === imgUrl;
+                      const label = getPhotoLabel(imgUrl, idx);
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setActivePreviewImage(imgUrl)}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono transition-all duration-200 cursor-pointer ${
+                            isCurrent
+                              ? 'bg-amber-500 text-black font-bold shadow-lg shadow-amber-900/40 border border-amber-400 scale-105'
+                              : 'bg-black/60 hover:bg-white/15 text-zinc-300 border border-white/15 backdrop-blur-md'
+                          }`}
+                        >
+                          <Camera className="w-3.5 h-3.5" />
+                          <span>{label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <div>
+                  <h3 className="font-display text-xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-lg">
+                    {previewPlace.name}
+                  </h3>
+                  <p className="text-xs sm:text-sm font-mono text-emerald-400 flex items-center justify-center gap-1.5">
+                    <MapPin className="w-4 h-4" />
+                    {previewPlace.location}, {previewPlace.region} • {previewPlace.type}
+                  </p>
+                  <p className="text-[11px] font-mono text-zinc-500 pt-1">
+                    Press ESC or click anywhere outside image to close
+                  </p>
+                </div>
               </div>
             </motion.div>
           )}

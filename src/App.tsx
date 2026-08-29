@@ -69,7 +69,7 @@ export default function App() {
         if (articlePart && articlePart !== 'work' && articlePart !== 'blog') {
           setActiveArticleId(articlePart);
         }
-      } else if (hash.includes('friends') || hash.includes('rara') || hash.includes('tilicho') || hash.includes('mustang') || hash.includes('abc')) {
+      } else if (hash.includes('chhusang') || hash.includes('friends') || hash.includes('rara') || hash.includes('tilicho') || hash.includes('mustang') || hash.includes('abc')) {
         // Direct place ID match in hash
         setCurrentView('life');
         setActiveStoryId(hash.split('/').pop() || hash);
@@ -142,14 +142,14 @@ export default function App() {
       <main>
         {currentView === 'home' ? (
           <>
-            <Hero />
+            <Hero onNavigateToLetsTalk={() => handleNavigate('lets-talk')} />
             <About />
             <WhatIDo />
             <Projects />
             <Experience />
             <Facts />
             <Quote />
-            <Contact />
+            <Contact onNavigateToLetsTalk={() => handleNavigate('lets-talk')} />
           </>
         ) : currentView === 'work' ? (
           <WorkPage 

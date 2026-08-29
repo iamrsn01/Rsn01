@@ -1,12 +1,12 @@
-import { useState, FormEvent } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Mail, MapPin, Facebook, Twitter, Github, Send, CheckCircle2, Copy, Check, MessageCircle, ArrowUpRight } from 'lucide-react';
+import { useState } from 'react';
+import { motion } from 'motion/react';
+import { ArrowRight, Mail, MessageCircle, Copy, Check, Sparkles, MapPin, Clock, ArrowUpRight } from 'lucide-react';
 
-export default function Contact() {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+interface ContactCTAProps {
+  onNavigateToLetsTalk: () => void;
+}
+
+export default function Contact({ onNavigateToLetsTalk }: ContactCTAProps) {
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const handleCopyEmail = () => {
@@ -15,348 +15,141 @@ export default function Contact() {
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) {
-      alert('Please fill out all fields.');
-      return;
-    }
-
-    setIsSubmitting(true);
-    setErrorMessage('');
-
-    try {
-      const response = await fetch('https://formsubmit.co/ajax/iamrsn01@gmail.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          _replyto: formData.email,
-          _subject: `New Message from Homepage Reach Out: ${formData.name}`,
-          message: formData.message,
-          _template: 'table',
-          _captcha: 'false'
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.success === 'true' || data.success === true || (data.message && data.message.toLowerCase().includes('activation')) || response.ok) {
-        setShowSuccessToast(true);
-        setFormData({ name: '', email: '', message: '' });
-        setTimeout(() => setShowSuccessToast(false), 6000);
-      } else {
-        throw new Error(data.message || 'Submission failed.');
-      }
-    } catch (err: any) {
-      console.error('Contact submission error:', err);
-      // Fallback
-      window.location.href = `mailto:iamrsn01@gmail.com?subject=${encodeURIComponent('Inquiry from ' + formData.name)}&body=${encodeURIComponent(formData.message)}`;
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <section 
       id="contact" 
       className="relative py-28 px-4 bg-[#050505] grid-overlay overflow-hidden"
     >
-      {/* Background ambient light */}
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-purple-900/10 blur-[140px] pointer-events-none" />
-      <div className="absolute top-[20%] left-[-10%] w-[35vw] h-[35vw] rounded-full bg-fuchsia-900/5 blur-[120px] pointer-events-none" />
+      {/* Background ambient radial glows */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[30vw] rounded-full bg-purple-900/15 blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-0 right-10 w-[30vw] h-[30vw] rounded-full bg-fuchsia-900/10 blur-[140px] pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-5xl mx-auto">
         
-        {/* Section Heading */}
-        <div className="mb-16">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8 }}
-            className="flex items-center gap-2 mb-3"
-          >
-            <span className="w-8 h-[1px] bg-purple-500" />
-            <span className="font-mono text-[10px] tracking-widest text-purple-400 uppercase">REACH OUT</span>
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="font-display font-bold text-4xl sm:text-5xl tracking-tight text-white"
-          >
-            Let's build something <span className="bg-gradient-to-r from-purple-400 to-fuchsia-400 bg-clip-text text-transparent">meaningful</span>.
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-4 text-zinc-400 text-sm max-w-lg font-light"
-          >
-            Have a project in mind or need assistance with web infrastructure and IT? Send a message and let's discuss possibilities.
-          </motion.p>
-        </div>
+        {/* Main CTA Card Box */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="relative rounded-3xl p-8 sm:p-14 glass border border-purple-500/20 shadow-2xl overflow-hidden text-center md:text-left group"
+        >
+          {/* Subtle gradient light sweep inside the card */}
+          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br from-purple-500/10 via-fuchsia-500/10 to-transparent blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-gradient-to-tr from-purple-900/15 to-transparent blur-3xl pointer-events-none" />
 
-        {/* 2-Column Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          
-          {/* Column 1: Direct Contact Details & Socials */}
-          <div className="lg:col-span-5 space-y-6">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
-            {/* Quick Contact Cards */}
-            <div className="space-y-4">
+            {/* Left Content Area */}
+            <div className="lg:col-span-7 space-y-6">
               
-              {/* Email Card with 1-Click Copy */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="glow-card glass p-5 rounded-2xl border border-white/5 flex items-center justify-between group hover:border-purple-500/20 transition-all duration-300"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-purple-400 group-hover:bg-purple-500/10 transition-all duration-300">
-                    <Mail className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <span className="block text-[9px] font-mono tracking-widest text-zinc-500 uppercase">DIRECT EMAIL</span>
-                    <a href="mailto:iamrsn01@gmail.com" className="block text-white hover:text-purple-300 font-medium text-sm sm:text-base transition-colors mt-0.5">
-                      iamrsn01@gmail.com
-                    </a>
-                  </div>
-                </div>
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-mono uppercase tracking-widest">
+                <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+                <span>LET'S BUILD TOGETHER</span>
+              </div>
 
+              {/* Headline */}
+              <h2 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white leading-tight">
+                Have a project or idea in mind?{' '}
+                <span className="bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+                  Let's make it happen.
+                </span>
+              </h2>
+
+              {/* Description */}
+              <p className="text-zinc-400 text-sm sm:text-base font-light leading-relaxed max-w-xl">
+                Whether you need modern web applications, IT infrastructure solutions, academic collaboration, or just want to discuss possibilities — I'm always open to new connections.
+              </p>
+
+              {/* Availability & Response Highlights */}
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2 text-xs text-zinc-300 font-mono">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/10">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Available for Projects</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/10">
+                  <Clock className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Response &lt; 24h</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/10">
+                  <MapPin className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Nepal (Remote Friendly)</span>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right Action Area */}
+            <div className="lg:col-span-5 flex flex-col items-center lg:items-end justify-center space-y-4 w-full">
+              
+              {/* Primary Call to Action Button */}
+              <button
+                type="button"
+                onClick={onNavigateToLetsTalk}
+                className="clickable group relative w-full sm:w-auto px-8 py-4.5 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white rounded-2xl font-display font-bold text-sm tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(168,85,247,0.35)] hover:shadow-[0_0_40px_rgba(168,85,247,0.6)] hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              >
+                <span>LET'S TALK & COLLABORATE</span>
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+
+              {/* Divider text */}
+              <div className="w-full flex items-center justify-center gap-3 py-1">
+                <span className="h-[1px] flex-1 bg-white/10" />
+                <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">or reach directly</span>
+                <span className="h-[1px] flex-1 bg-white/10" />
+              </div>
+
+              {/* Direct Fast Contact Pill Options */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
+                
+                {/* 1-Click Copy Email */}
                 <button
                   type="button"
                   onClick={handleCopyEmail}
                   title="Copy email to clipboard"
-                  className="p-2 rounded-lg bg-white/[0.04] hover:bg-purple-500/20 text-zinc-400 hover:text-purple-300 transition-colors clickable"
+                  className="clickable p-3 rounded-xl bg-white/[0.03] hover:bg-purple-500/15 border border-white/10 hover:border-purple-500/30 flex items-center justify-between text-left transition-all duration-200 cursor-pointer group"
                 >
-                  {copiedEmail ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  <div className="flex items-center gap-2.5">
+                    <Mail className="w-4 h-4 text-purple-400 group-hover:scale-110 transition-transform" />
+                    <div>
+                      <span className="block text-[9px] font-mono text-zinc-500 uppercase">EMAIL ME</span>
+                      <span className="block text-xs font-medium text-white truncate">iamrsn01@gmail.com</span>
+                    </div>
+                  </div>
+                  <div className="p-1 rounded-md bg-white/[0.05] text-zinc-400 group-hover:text-purple-300">
+                    {copiedEmail ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  </div>
                 </button>
-              </motion.div>
 
-              {/* WhatsApp Direct Chat Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.05 }}
-                className="glow-card glass p-5 rounded-2xl border border-white/5 flex items-center justify-between group hover:border-emerald-500/30 transition-all duration-300"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-emerald-400 group-hover:bg-emerald-500/10 transition-all duration-300 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
-                    <MessageCircle className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <span className="block text-[9px] font-mono tracking-widest text-zinc-500 uppercase">WHATSAPP DIRECT</span>
-                    <a 
-                      href="https://wa.me/9779801104032" 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      className="block text-white hover:text-emerald-400 font-medium text-sm sm:text-base transition-colors mt-0.5"
-                    >
-                      +977 9801104032
-                    </a>
-                  </div>
-                </div>
-
+                {/* Direct WhatsApp Chat */}
                 <a
                   href="https://wa.me/9779801104032"
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors clickable flex items-center gap-1 text-xs font-semibold"
-                  title="Chat on WhatsApp"
+                  title="Chat directly on WhatsApp"
+                  className="clickable p-3 rounded-xl bg-white/[0.03] hover:bg-emerald-500/15 border border-white/10 hover:border-emerald-500/30 flex items-center justify-between text-left transition-all duration-200 cursor-pointer group"
                 >
-                  <span>Chat</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
+                  <div className="flex items-center gap-2.5">
+                    <MessageCircle className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+                    <div>
+                      <span className="block text-[9px] font-mono text-zinc-500 uppercase">WHATSAPP</span>
+                      <span className="block text-xs font-medium text-white">+977 9801104032</span>
+                    </div>
+                  </div>
+                  <div className="p-1 rounded-md bg-emerald-500/10 text-emerald-400">
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </div>
                 </a>
-              </motion.div>
 
-              {/* Location Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="glow-card glass p-5 rounded-2xl border border-white/5 flex items-center gap-4 group hover:border-purple-500/20 transition-all duration-300"
-              >
-                <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-purple-400 group-hover:bg-purple-500/10 transition-all duration-300">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="block text-[9px] font-mono tracking-widest text-zinc-500 uppercase">BASE LOCATION</span>
-                  <span className="block text-white font-medium text-sm sm:text-base mt-0.5">Simara-2, Bara (Nepal)</span>
-                </div>
-              </motion.div>
+              </div>
 
             </div>
 
-            {/* Social Grid */}
-            <div className="space-y-4 pt-4">
-              <span className="block font-mono text-[9px] tracking-widest text-zinc-500 uppercase">SOCIAL & CODE CHANNELS</span>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                
-                {/* GitHub Card */}
-                <motion.a
-                  href="https://github.com/iamrsn01"
-                  target="_blank"
-                  rel="noreferrer"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                  className="glow-card glass p-4 rounded-xl border border-white/5 flex items-center justify-between group clickable hover:border-purple-500/25"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Github className="w-4 h-4 text-zinc-400 group-hover:text-purple-400 transition-colors" />
-                    <span className="text-xs font-semibold text-zinc-300 group-hover:text-white transition-colors">GitHub</span>
-                  </div>
-                  <span className="text-[9px] font-mono text-zinc-500 group-hover:text-purple-400">/iamrsn01</span>
-                </motion.a>
-
-                {/* Facebook Card */}
-                <motion.a
-                  href="https://www.facebook.com/rsn01"
-                  target="_blank"
-                  rel="noreferrer"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.05 }}
-                  className="glow-card glass p-4 rounded-xl border border-white/5 flex items-center justify-between group clickable hover:border-purple-500/25"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Facebook className="w-4 h-4 text-zinc-400 group-hover:text-purple-400 transition-colors" />
-                    <span className="text-xs font-semibold text-zinc-300 group-hover:text-white transition-colors">Facebook</span>
-                  </div>
-                  <span className="text-[9px] font-mono text-zinc-500 group-hover:text-purple-400">/rsn01</span>
-                </motion.a>
-
-                {/* Twitter / X Card */}
-                <motion.a
-                  href="https://x.com/Rosan4eva"
-                  target="_blank"
-                  rel="noreferrer"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                  className="glow-card glass p-4 rounded-xl border border-white/5 flex items-center justify-between group clickable hover:border-purple-500/25"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Twitter className="w-4 h-4 text-zinc-400 group-hover:text-purple-400 transition-colors" />
-                    <span className="text-xs font-semibold text-zinc-300 group-hover:text-white transition-colors">X</span>
-                  </div>
-                  <span className="text-[9px] font-mono text-zinc-500 group-hover:text-purple-400">@Rosan4eva</span>
-                </motion.a>
-
-              </div>
-            </div>
           </div>
-
-          {/* Column 2: Interactive Glass Contact Form */}
-          <div className="lg:col-span-7">
-            <motion.form
-              onSubmit={handleSubmit}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="glass p-8 sm:p-10 rounded-3xl border border-white/5 space-y-6 relative"
-            >
-              {/* Field: Full Name */}
-              <div className="space-y-2 relative">
-                <label className="block text-[10px] font-mono tracking-widest text-zinc-500 uppercase font-semibold">01 / YOUR NAME</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="e.g. John Doe"
-                  className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.04] transition-all"
-                />
-              </div>
-
-              {/* Field: Email Address */}
-              <div className="space-y-2 relative">
-                <label className="block text-[10px] font-mono tracking-widest text-zinc-500 uppercase font-semibold">02 / EMAIL ADDRESS</label>
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="e.g. john@example.com"
-                  className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.04] transition-all"
-                />
-              </div>
-
-              {/* Field: Message */}
-              <div className="space-y-2 relative">
-                <label className="block text-[10px] font-mono tracking-widest text-zinc-500 uppercase font-semibold">03 / YOUR MESSAGE</label>
-                <textarea
-                  required
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Tell me about your project, idea, or academic opportunity..."
-                  className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.04] transition-all resize-none"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="clickable group w-full relative py-4 bg-white hover:bg-zinc-100 disabled:bg-zinc-800 text-black rounded-xl font-display font-bold text-xs tracking-widest uppercase overflow-hidden transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] disabled:pointer-events-none"
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <span className="h-4 w-4 rounded-full border-2 border-zinc-400 border-t-black animate-spin" />
-                    <span>DISPATCHING...</span>
-                  </span>
-                ) : (
-                  <>
-                    <span>DISPATCH MESSAGE</span>
-                    <Send className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </>
-                )}
-              </button>
-            </motion.form>
-          </div>
-
-        </div>
+        </motion.div>
 
       </div>
-
-      {/* Success Notification Toast overlay */}
-      <AnimatePresence>
-        {showSuccessToast && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="fixed bottom-6 right-6 z-50 glass border border-purple-500/30 p-5 rounded-2xl flex items-start gap-4 shadow-2xl max-w-sm"
-          >
-            <div className="p-1 rounded-lg bg-purple-500/10 text-purple-400">
-              <CheckCircle2 className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-display font-bold text-white text-sm">Message Dispatched</h4>
-              <p className="text-zinc-400 text-xs mt-1 leading-relaxed">
-                Thank you! Your communication payload has been securely routed. Roshan Sah will respond shortly.
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }
